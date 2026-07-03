@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RaceRide — Jede Strecke wird zur Rennstrecke | GPS Renn-App</title>
+<meta name="description" content="RaceRide macht aus jeder bekannten Strecke ein Live-Rennen gegen Freunde. Für E-Bike, MTB, Rennrad. Kostenlos für Android.">
+<meta name="keywords" content="Fahrrad App, GPS Tracking, Rennrad App, E-Bike App, MTB App, Strava Alternative, Komoot Alternative, Live Racing, Ghost Racing">
+<meta property="og:title" content="RaceRide — Ride fast. Race anywhere.">
+<meta property="og:description" content="Die erste echte Live-Racing App für Radfahrer. Erstelle eigene Rennstrecken und fahre gegen Freunde.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thunderous-pudding-f40f34.netlify.app">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RaceRide — Ride fast. Race anywhere.">
+<meta name="twitter:description" content="Ghost-Racing, Live-Tracking, Kalman-GPS, Offline-Karten. Die Fahrrad-App für echte Fahrer.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "RaceRide",
+  "operatingSystem": "Android",
+  "applicationCategory": "SportsApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+  "description": "RaceRide macht aus jeder bekannten Strecke ein Live-Rennen gegen Freunde. GPS-Renn-App für alle Fahrradtypen.",
+  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "ratingCount": "1" }
+}
+</script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --black:#111111;
+    --orange:#e85d00;
+    --orange-dark:#c24e00;
+    --orange-light:#ff7a1a;
+    --white:#ffffff;
+    --gray:#888888;
+    --surface:#1a1a1a;
+    --surface2:#222222;
+  }
+  html{scroll-behavior:smooth}
+  body{background:var(--black);color:var(--white);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;overflow-x:hidden}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;background:rgba(17,17,17,0.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.06)}
+  .logo{font-size:20px;font-weight:700;font-style:italic;letter-spacing:-0.5px}
+  .logo span{color:var(--orange)}
+  .nav-links{display:flex;align-items:center;gap:28px}
+  .nav-links a{color:rgba(255,255,255,0.55);text-decoration:none;font-size:14px;transition:color 0.2s}
+  .nav-links a:hover{color:var(--white)}
+  .nav-cta{background:var(--orange);color:var(--white)!important;border:none;padding:9px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;transition:background 0.2s}
+  .nav-cta:hover{background:var(--orange-dark)!important}
+
+  /* HERO */
+  .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(232,93,0,0.12) 0%,transparent 70%);pointer-events:none}
+  .hero-stripes{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .stripe{position:absolute;background:var(--orange);opacity:0.04;transform:rotate(-35deg);transform-origin:center}
+  .stripe-1{width:3px;height:200%;top:-50%;left:25%}
+  .stripe-2{width:6px;height:200%;top:-50%;left:50%}
+  .stripe-3{width:3px;height:200%;top:-50%;left:75%}
+  .eyebrow{font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--orange);margin-bottom:20px}
+  .hero h1{font-size:clamp(44px,8vw,88px);font-weight:800;line-height:1.05;letter-spacing:-2px;margin-bottom:16px;font-style:italic}
+  .hero h1 em{color:var(--orange);font-style:italic}
+  .hero-tagline{font-size:clamp(20px,3vw,32px);font-weight:700;color:rgba(255,255,255,0.35);letter-spacing:-0.5px;margin-bottom:28px;font-style:italic}
+  .hero-sub{font-size:17px;color:rgba(255,255,255,0.5);max-width:540px;margin:0 auto 44px;line-height:1.65}
+  .hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+  .btn-primary{background:var(--orange);color:var(--white);text-decoration:none;padding:16px 32px;border-radius:12px;font-size:16px;font-weight:700;transition:background 0.2s,transform 0.15s;display:inline-block}
+  .btn-primary:hover{background:var(--orange-dark);transform:translateY(-1px)}
+  .btn-secondary{background:rgba(255,255,255,0.07);color:var(--white);text-decoration:none;padding:16px 28px;border-radius:12px;font-size:16px;font-weight:600;border:1px solid rgba(255,255,255,0.12);transition:background 0.2s,transform 0.15s;display:inline-block}
+  .btn-secondary:hover{background:rgba(255,255,255,0.12);transform:translateY(-1px)}
+  .hero-note{font-size:12px;color:rgba(255,255,255,0.25);margin-bottom:32px}
+  .counter{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:30px;padding:10px 20px;font-size:13px;color:rgba(255,255,255,0.5)}
+  .counter-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+
+  /* PROOF STRIP */
+  .proof{padding:40px 24px;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);text-align:center}
+  .proof p{font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.2);margin-bottom:20px}
+  .proof-tags{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+  .proof-tag{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:6px 16px;font-size:13px;color:rgba(255,255,255,0.4)}
+
+  /* FEATURES */
+  .features{padding:100px 24px;max-width:1100px;margin:0 auto}
+  .section-label{font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--orange);margin-bottom:16px;text-align:center}
+  .section-title{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1px;text-align:center;margin-bottom:60px;font-style:italic}
+  .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2px;border:2px solid var(--surface2);border-radius:16px;overflow:hidden}
+  .feat{background:var(--surface);padding:32px;transition:background 0.2s}
+  .feat:hover{background:var(--surface2)}
+  .feat-icon{font-size:28px;margin-bottom:16px;display:block}
+  .feat h3{font-size:16px;font-weight:700;margin-bottom:8px;letter-spacing:-0.3px}
+  .feat .new-badge{display:inline-block;background:var(--orange);color:var(--white);font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;margin-left:6px;vertical-align:middle;letter-spacing:0.05em}
+  .feat p{font-size:13px;color:rgba(255,255,255,0.42);line-height:1.6}
+
+  /* COMPAT */
+  .compat{padding:80px 24px;max-width:960px;margin:0 auto;text-align:center}
+  .compat-grid{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:40px}
+  .compat-item{background:var(--surface);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:18px 28px;font-size:14px;font-weight:600;color:rgba(255,255,255,0.65);display:flex;align-items:center;gap:10px;transition:border-color 0.2s}
+  .compat-item:hover{border-color:rgba(232,93,0,0.4)}
+  .compat-item .ci{font-size:20px}
+
+  /* STATS */
+  .stats{padding:80px 24px;max-width:960px;margin:0 auto;text-align:center}
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:48px}
+  .stat-card{background:var(--surface);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:32px 24px;transition:transform 0.2s}
+  .stat-card:hover{transform:translateY(-4px)}
+  .stat-icon{font-size:36px;margin-bottom:14px;display:block}
+  .stat-card h3{font-size:15px;font-weight:700;margin-bottom:6px}
+  .stat-card p{font-size:13px;color:rgba(255,255,255,0.38);line-height:1.5}
+
+  /* VS TABLE */
+  .vs{padding:80px 24px;max-width:900px;margin:0 auto}
+  .vs-table{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden}
+  .vs-table th{padding:16px 20px;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;font-weight:600}
+  .vs-table th:first-child{text-align:left;color:rgba(255,255,255,0.3);background:var(--surface)}
+  .vs-table th.us{background:var(--orange);color:var(--white)}
+  .vs-table th.them{background:var(--surface2);color:rgba(255,255,255,0.4)}
+  .vs-table td{padding:14px 20px;font-size:14px;border-top:1px solid rgba(255,255,255,0.05)}
+  .vs-table td:first-child{background:var(--surface);color:rgba(255,255,255,0.5)}
+  .vs-table td.us{background:rgba(232,93,0,0.06);text-align:center}
+  .vs-table td.them{background:var(--surface2);text-align:center;color:rgba(255,255,255,0.3)}
+  .check{color:var(--orange);font-size:18px}
+  .cross{color:rgba(255,255,255,0.15);font-size:18px}
+
+  /* COMMUNITY */
+  .community{padding:80px 24px;max-width:1100px;margin:0 auto}
+  .community-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:48px}
+  .community-card{background:var(--surface);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px;text-align:center;transition:transform 0.2s}
+  .community-card:hover{transform:translateY(-4px)}
+  .community-card .icon{font-size:36px;margin-bottom:16px}
+  .community-card h3{font-size:16px;font-weight:700;margin-bottom:8px}
+  .community-card p{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.5}
+
+  /* HOW IT WORKS */
+  .how{padding:80px 24px;max-width:900px;margin:0 auto}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;position:relative}
+  .steps::before{content:'';position:absolute;top:28px;left:10%;right:10%;height:1px;background:rgba(232,93,0,0.2)}
+  .step{text-align:center;padding:0 20px;position:relative}
+  .step-num{width:56px;height:56px;border-radius:50%;background:var(--orange);color:var(--white);font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;position:relative;z-index:1;font-style:italic}
+  .step h3{font-size:16px;font-weight:700;margin-bottom:8px}
+  .step p{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.5}
+
+  /* PRICING */
+  .pricing{padding:100px 24px;max-width:900px;margin:0 auto}
+  .plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:48px}
+  .plan{background:var(--surface);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px;position:relative;transition:transform 0.2s}
+  .plan:hover{transform:translateY(-4px)}
+  .plan.featured{border-color:var(--orange);background:rgba(232,93,0,0.06)}
+  .plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--orange);color:var(--white);font-size:11px;font-weight:700;padding:4px 14px;border-radius:20px;white-space:nowrap}
+  .plan-name{font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em}
+  .plan-price{font-size:36px;font-weight:800;letter-spacing:-1px;margin-bottom:4px;font-style:italic}
+  .plan-price span{font-size:16px;font-weight:400;color:rgba(255,255,255,0.4);font-style:normal}
+  .plan-period{font-size:12px;color:rgba(255,255,255,0.3);margin-bottom:20px}
+  .plan-features{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .plan-features li{font-size:13px;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:8px}
+  .plan-features li::before{content:'✓';color:var(--orange);font-weight:700;flex-shrink:0}
+
+  /* DOWNLOAD SECTION */
+  .download{padding:100px 24px;text-align:center;position:relative;overflow:hidden}
+  .download-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 100%,rgba(232,93,0,0.1) 0%,transparent 70%);pointer-events:none}
+  .download h2{font-size:clamp(32px,5vw,56px);font-weight:800;letter-spacing:-1.5px;margin-bottom:16px;font-style:italic}
+  .download .sub{font-size:16px;color:rgba(255,255,255,0.4);margin-bottom:40px}
+  .download-box{background:var(--surface);border:1px solid rgba(232,93,0,0.3);border-radius:20px;padding:40px 32px;max-width:540px;margin:0 auto}
+  .download-box .version{font-size:12px;color:rgba(255,255,255,0.25);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.1em}
+
+  /* CTA */
+  .cta{padding:80px 24px;text-align:center}
+  .cta h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1px;margin-bottom:16px;font-style:italic}
+  .cta p{font-size:15px;color:rgba(255,255,255,0.4);margin-bottom:32px;max-width:500px;margin-left:auto;margin-right:auto}
+  .email-form{display:flex;gap:10px;max-width:440px;width:100%;margin:0 auto 16px;flex-wrap:wrap;justify-content:center}
+  .email-form input{flex:1;min-width:220px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:14px 18px;color:var(--white);font-size:15px;outline:none;transition:border-color 0.2s}
+  .email-form input::placeholder{color:rgba(255,255,255,0.3)}
+  .email-form input:focus{border-color:var(--orange)}
+  .email-form button{background:var(--orange);color:var(--white);border:none;border-radius:10px;padding:14px 24px;font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background 0.2s}
+  .email-form button:hover{background:var(--orange-dark)}
+
+  /* FOOTER */
+  footer{padding:48px 24px 32px;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+  .footer-logo{font-size:20px;font-weight:800;font-style:italic}
+  .footer-logo span{color:var(--orange)}
+  .footer-tagline{font-size:13px;color:rgba(255,255,255,0.25);font-style:italic}
+  footer .copy{font-size:12px;color:rgba(255,255,255,0.18)}
+  .footer-links{display:flex;gap:20px}
+  .footer-links a{font-size:12px;color:rgba(255,255,255,0.25);text-decoration:none}
+  .footer-links a:hover{color:rgba(255,255,255,0.5)}
+
+  /* SUCCESS */
+  .success-msg{display:none;background:rgba(232,93,0,0.15);border:1px solid rgba(232,93,0,0.3);border-radius:10px;padding:14px 20px;font-size:14px;color:var(--orange);margin-top:12px;text-align:center}
+
+  /* MODAL */
+  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;overflow-y:auto;padding:40px 16px}
+  .modal.active{display:flex;align-items:flex-start;justify-content:center}
+  .modal-box{background:#1a1a1a;border:0.5px solid rgba(255,255,255,0.1);border-radius:16px;padding:32px;max-width:680px;width:100%;position:relative;margin:auto}
+  .modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:22px;cursor:pointer;line-height:1}
+  .modal-close:hover{color:#fff}
+  .modal h2{font-size:22px;font-weight:700;margin-bottom:20px;color:#fff}
+  .modal h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:#e85d00}
+  .modal p{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:10px}
+  .modal a{color:#e85d00}
+
+  @media(max-width:600px){
+    .nav-links{display:none}
+    .steps::before{display:none}
+    .vs-table{font-size:12px}
+    .vs-table th,.vs-table td{padding:10px 12px}
+    .hero-btns{flex-direction:column;align-items:center}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Race<span>Ride</span></div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#compat">Kompatibel</a>
+    <a href="#community">Community</a>
+    <a href="#pricing">Preise</a>
+    <a href="#waitlist" class="nav-cta">Bald im Play Store</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-stripes">
+    <div class="stripe stripe-1"></div>
+    <div class="stripe stripe-2"></div>
+    <div class="stripe stripe-3"></div>
+  </div>
+  <div class="eyebrow">Beta · Android · Kostenlos</div>
+  <h1>Jede Strecke wird zur<br><em>Rennstrecke.</em></h1>
+  <p class="hero-tagline">Ride fast. Race anywhere.</p>
+  <p class="hero-sub">RaceRide verwandelt jede bekannte Strecke in ein Live-Rennen gegen Freunde. Für E-Bike, MTB, Rennrad und alle Fahrradtypen.</p>
+  <div class="hero-btns">
+    <a href="#waitlist" class="btn-primary">Jetzt vormerken</a>
+    <a href="#features" class="btn-secondary">Mehr erfahren</a>
+  </div>
+  <p class="hero-note">Kostenlos · Bald im Google Play Store</p>
+  <div class="counter">
+    <div class="counter-dot"></div>
+    Beta v1.8.3 — Aktiv in Entwicklung
+  </div>
+</section>
+
+<!-- PROOF STRIP -->
+<div class="proof">
+  <p>Für jedes Bike – egal welcher Motor oder Antrieb</p>
+  <div class="proof-tags">
+    <div class="proof-tag">Rennrad</div>
+    <div class="proof-tag">E-Bike</div>
+    <div class="proof-tag">MTB</div>
+    <div class="proof-tag">Gravel</div>
+    <div class="proof-tag">City-Bike</div>
+    <div class="proof-tag">Bosch</div>
+    <div class="proof-tag">Shimano</div>
+    <div class="proof-tag">Yamaha</div>
+    <div class="proof-tag">Ohne Motor</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-label">Was RaceRide kann</div>
+  <h2 class="section-title">Gebaut für echte Fahrer.</h2>
+  <div class="features-grid">
+    <div class="feat">
+      <span class="feat-icon">🏁</span>
+      <h3>Live-Racing <span class="new-badge">NEU</span></h3>
+      <p>Fahre in Echtzeit gegen Freunde auf deiner Strecke. Automatische Start- und Zielerkennung, Rangliste in Sekunden.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">👻</span>
+      <h3>Ghost-Racing</h3>
+      <p>Schlage deine eigene Bestzeit als virtueller Geist auf der Karte. Überhole ihn – die App gibt Sprach-Updates ob du vorne liegst.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">🗺️</span>
+      <h3>Eigene Strecken</h3>
+      <p>Erstelle Rennstrecken überall auf der Welt. Zeichne auf der Karte, lade per Link, fahre sofort.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">🏔️</span>
+      <h3>Offroad-Support <span class="new-badge">NEU</span></h3>
+      <p>MTB Trails, Schotter, Forstweg — mit Trail-Bedingungen (nass, trocken, schneebedeckt) und Untergrundfilter.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">📥</span>
+      <h3>GPX &amp; FIT Export</h3>
+      <p>Kompatibel mit Garmin Connect, Strava, Apple Health, Google Fit, Wahoo, TrainingPeaks, Polar, Suunto — kostenlos.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">⌚</span>
+      <h3>Watch-Navigation <span class="new-badge">NEU</span></h3>
+      <p>Verbinde deine Garmin, Polar oder Suunto Uhr per Bluetooth. Geschwindigkeit, Distanz und Höhenmeter am Handgelenk.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">🗺️</span>
+      <h3>Offline-Karten <span class="new-badge">NEU</span></h3>
+      <p>Lade Kartenregionen herunter und nutze RaceRide auch ohne Netz — perfekt für Trails im Funkloch.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">👥</span>
+      <h3>Social Feed <span class="new-badge">NEU</span></h3>
+      <p>Teile Fahrten, vergib Likes, kommentiere Freundesfahrten — das soziale Netzwerk für Radfahrer.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">🏆</span>
+      <h3>Achievements &amp; Challenges</h3>
+      <p>Verdiene Abzeichen, steige im Level auf, meistere wöchentliche Herausforderungen und teile Rekord-Zertifikate.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">🔋</span>
+      <h3>Akku-optimiert <span class="new-badge">NEU</span></h3>
+      <p>Adaptives GPS: Intervall skaliert automatisch mit Geschwindigkeit und Akkustand. Hintergrund-Tracking via Foreground Service.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">🛰️</span>
+      <h3>Präzises GPS <span class="new-badge">NEU</span></h3>
+      <p>Kalman-Filter glättet GPS-Rauschen in Echtzeit. Ausreißer werden erkannt und verworfen. Auto-Pause bei Stillstand.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">📡</span>
+      <h3>Live-Tracking</h3>
+      <p>Familie und Freunde verfolgen deine Fahrt in Echtzeit. Per Link teilen — kein Account nötig.</p>
+    </div>
+  </div>
+</section>
+
+<!-- COMPATIBILITY -->
+<section class="compat" id="compat">
+  <div class="section-label">Integration</div>
+  <h2 class="section-title">Kompatibel mit allen deinen Apps.</h2>
+  <p style="font-size:15px;color:rgba(255,255,255,0.42);max-width:540px;margin:0 auto;line-height:1.65">Exportiere Fahrten als FIT oder GPX — deine Daten gehören dir und landen überall wo du willst.</p>
+  <div class="compat-grid">
+    <div class="compat-item"><span class="ci">🏃</span> Garmin Connect</div>
+    <div class="compat-item"><span class="ci">🚴</span> Strava</div>
+    <div class="compat-item"><span class="ci">🍎</span> Apple Health</div>
+    <div class="compat-item"><span class="ci">🤖</span> Google Fit</div>
+    <div class="compat-item"><span class="ci">⚡</span> Wahoo</div>
+    <div class="compat-item"><span class="ci">📊</span> TrainingPeaks</div>
+    <div class="compat-item"><span class="ci">🔵</span> Polar Flow</div>
+    <div class="compat-item"><span class="ci">⛰️</span> Suunto App</div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="section-label">RaceRide in Zahlen</div>
+  <h2 class="section-title">Zahlen die zählen.</h2>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-icon">🚴</span>
+      <h3>Alle Fahrradtypen</h3>
+      <p>E-Bike, MTB, Rennrad, Gravel, City — kein Gerät ausgeschlossen.</p>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">🌍</span>
+      <h3>DACH-Markt</h3>
+      <p>Hamburg, Berlin, München, Köln — gebaut für deutsche Radfahrer.</p>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">⚡</span>
+      <h3>GPS-Präzision</h3>
+      <p>Kalman-Filter, 2m Mindestbewegung, 120 km/h Plausibilitätsprüfung.</p>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">🔒</span>
+      <h3>DSGVO-konform</h3>
+      <p>Supabase-Server in Frankfurt. Deine Daten bleiben in Deutschland.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GHOST RACING SPOTLIGHT -->
+<section style="padding:60px 24px;max-width:900px;margin:0 auto;text-align:center">
+  <div style="background:linear-gradient(135deg,rgba(232,93,0,0.15),rgba(232,93,0,0.05));border:1px solid rgba(232,93,0,0.3);border-radius:20px;padding:40px 32px">
+    <div style="font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#e85d00;margin-bottom:12px">⚡ Killer-Feature</div>
+    <h2 style="font-size:clamp(24px,4vw,38px);font-weight:800;letter-spacing:-1px;font-style:italic;margin-bottom:16px">Ghost-Racing gegen Freunde</h2>
+    <p style="font-size:15px;color:rgba(255,255,255,0.55);max-width:500px;margin:0 auto 24px;line-height:1.7">Wähle einen Freund aus, starte die Strecke und fahre gegen seinen virtuellen Geist auf der Karte. Überhole ihn – und die App sagt dir per Sprache ob du vorne liegst. Das ist echter Rennsport, jederzeit, überall.</p>
+    <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap">
+      <div style="text-align:center"><div style="font-size:28px;font-weight:800;color:#e85d00">👻</div><div style="font-size:12px;color:rgba(255,255,255,0.4)">Ghost-Marker</div></div>
+      <div style="text-align:center"><div style="font-size:28px;font-weight:800;color:#e85d00">🗣️</div><div style="font-size:12px;color:rgba(255,255,255,0.4)">Sprach-Updates</div></div>
+      <div style="text-align:center"><div style="font-size:28px;font-weight:800;color:#e85d00">🏆</div><div style="font-size:12px;color:rgba(255,255,255,0.4)">Rekord-Zertifikat</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- VS TABLE -->
+<section class="vs">
+  <div class="section-label">Der Vergleich</div>
+  <h2 class="section-title" style="text-align:center;margin-bottom:16px;font-style:italic">Warum RaceRide?</h2>
+  <p style="text-align:center;color:rgba(255,255,255,0.45);font-size:15px;max-width:600px;margin:0 auto 40px;line-height:1.7">Strava hat E-Bike Bestzeiten verboten. Flow läuft nur mit Bosch. Komoot stirbt offline. Wir haben genug gezahlt für Apps die uns nicht ernst nehmen – RaceRide ist für Fahrer gebaut, von Fahrern.</p>
+  <table class="vs-table">
+    <thead>
+      <tr>
+        <th style="text-align:left">Feature</th>
+        <th class="us">RaceRide</th>
+        <th class="them">Flow / Strava</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Alle Bike-Typen inkl. E-Bike</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="cross">✗</span></td></tr>
+      <tr><td>Eigene Strecken erstellen</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="cross">✗</span></td></tr>
+      <tr><td>Ghost-Racing gegen Freunde</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="cross">✗</span></td></tr>
+      <tr><td>Live-Tracking für Familie</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="cross">✗</span></td></tr>
+      <tr><td>Offroad / MTB Trail Support</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="cross">✗</span></td></tr>
+      <tr><td>Kalman-GPS-Filter</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="cross">✗</span></td></tr>
+      <tr><td>Sprach-Navigation</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="cross">✗</span></td></tr>
+      <tr><td>Offline-Karten</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="cross">✗</span></td></tr>
+      <tr><td>GPX-Export kostenlos</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="cross">✗</span></td></tr>
+      <tr><td>FIT Export (Garmin/Strava)</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="check">✓</span></td></tr>
+      <tr><td>Watch-Navigation (BLE)</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="cross">✗</span></td></tr>
+      <tr><td>Sozialer Feed mit Likes</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="check">✓</span></td></tr>
+      <tr><td>DSGVO – Server in Deutschland</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="cross">✗</span></td></tr>
+      <tr><td>Fairer Preis – kein Preisanstieg</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="cross">✗</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- COMMUNITY -->
+<section class="community" id="community">
+  <div class="section-label" style="text-align:center">Community</div>
+  <h2 class="section-title">Mehr als nur eine Tracking-App.</h2>
+  <div class="community-grid">
+    <div class="community-card">
+      <div class="icon">📱</div>
+      <h3>Aktivitäts-Feed</h3>
+      <p>Sieh was deine Freunde fahren, like und kommentiere ihre Fahrten.</p>
+    </div>
+    <div class="community-card">
+      <div class="icon">🔗</div>
+      <h3>Strecken teilen</h3>
+      <p>Teile deine Lieblingsstrecke per Link – Freunde öffnen sie direkt in der App.</p>
+    </div>
+    <div class="community-card">
+      <div class="icon">🎯</div>
+      <h3>Wöchentliche Challenges</h3>
+      <p>Jede Woche neue Herausforderungen die sich an dein Level anpassen.</p>
+    </div>
+    <div class="community-card">
+      <div class="icon">🤝</div>
+      <h3>Freunde einladen</h3>
+      <p>Lade Freunde ein und verdiene einen Monat Pro gratis für jeden der beitritt.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="section-label" style="text-align:center">So funktioniert's</div>
+  <h2 class="section-title">In 3 Schritten zum Rennen.</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Strecke zeichnen</h3>
+      <p>Öffne die Karte, zeichne deine Route mit dem Finger – Wald, Straße, Gelände.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Losfahren</h3>
+      <p>Die App erkennt automatisch wenn du startest und stoppt die Zeit präzise.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Rangliste checken</h3>
+      <p>Sieh sofort wo du stehst – und fordere den Nächsten in der Liste heraus.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="section-label" style="text-align:center">Preise</div>
+  <h2 class="section-title">Einfach und fair.</h2>
+  <div class="plans">
+    <div class="plan">
+      <div class="plan-name">Free</div>
+      <div class="plan-price">0 <span>€</span></div>
+      <div class="plan-period">für immer kostenlos</div>
+      <ul class="plan-features">
+        <li>3 Fahrten aufzeichnen</li>
+        <li>Strecken erstellen</li>
+        <li>Rangliste ansehen</li>
+        <li>GPX-Export</li>
+      </ul>
+    </div>
+    <div class="plan featured">
+      <div class="plan-badge">Beliebt</div>
+      <div class="plan-name">Pro Monat</div>
+      <div class="plan-price">2,99 <span>€</span></div>
+      <div class="plan-period">monatlich kündbar</div>
+      <ul class="plan-features">
+        <li>Unbegrenzte Fahrten</li>
+        <li>Ghost-Racing</li>
+        <li>Live-Tracking</li>
+        <li>Sprach-Navigation</li>
+        <li>Offline-Karten</li>
+        <li>FIT &amp; GPX Export</li>
+      </ul>
+    </div>
+    <div class="plan">
+      <div class="plan-name">Pro Jahr</div>
+      <div class="plan-price">20,99 <span>€</span></div>
+      <div class="plan-period">1,74 € / Monat · –30%</div>
+      <ul class="plan-features">
+        <li>Alles aus Pro</li>
+        <li>30% günstiger</li>
+      </ul>
+    </div>
+    <div class="plan">
+      <div class="plan-name">Lifetime</div>
+      <div class="plan-price">59,99 <span>€</span></div>
+      <div class="plan-period">einmal zahlen, für immer</div>
+      <ul class="plan-features">
+        <li>Alle Pro-Features</li>
+        <li>Alle künftigen Updates</li>
+        <li>Für frühe Unterstützer</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / WAITLIST -->
+<section class="cta" id="waitlist">
+  <h2>Bald im Google Play Store.</h2>
+  <p>RaceRide durchläuft gerade die Play-Store-Freigabe. Trag dich ein und wir informieren dich, sobald die App offiziell verfügbar ist.</p>
+  <form action="https://formspree.io/f/xrevodzg" method="POST" class="email-form" onsubmit="handleSubmit(event,'success-msg')">
+    <input type="email" name="email" placeholder="deine@email.de" required>
+    <button type="submit">Informiert bleiben</button>
+  </form>
+  <div class="success-msg" id="success-msg">🎉 Du bist dabei! Wir melden uns, sobald RaceRide im Play Store ist.</div>
+</section>
+
+<footer>
+  <div class="footer-logo">Race<span>Ride</span></div>
+  <div class="footer-tagline">Jede Strecke wird zur Rennstrecke.</div>
+  <div class="footer-links">
+    <a href="datenschutz.html">Datenschutz</a>
+    <a href="#" onclick="openModal('impressum');return false;">Impressum</a>
+    <a href="mailto:racerideapp@gmail.com">Kontakt</a>
+  </div>
+  <p class="copy">© 2026 RaceRide · Ride fast. Race anywhere.</p>
+</footer>
+
+<script>
+function handleSubmit(e, msgId) {
+  e.preventDefault();
+  var form = e.target;
+  fetch(form.action, {
+    method: 'POST',
+    body: new FormData(form),
+    headers: { 'Accept': 'application/json' }
+  }).then(function(r) {
+    if(r.ok) {
+      form.style.display = 'none';
+      document.getElementById(msgId).style.display = 'block';
+    } else {
+      alert('Fehler – bitte versuche es nochmal.');
+    }
+  }).catch(function() { alert('Fehler – bitte versuche es nochmal.'); });
+}
+</script>
+
+<!-- IMPRESSUM MODAL -->
+<div class="modal" id="modal-impressum">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('impressum')">&times;</button>
+    <h2>Impressum</h2>
+    <h3>Angaben gemäß § 5 TMG</h3>
+    <p>Dennis Kieper<br>Benatzkyweg 19<br>22145 Hamburg<br>Deutschland</p>
+    <h3>Kontakt</h3>
+    <p>E-Mail: <a href="mailto:racerideapp@gmail.com">racerideapp@gmail.com</a></p>
+    <h3>Hinweis</h3>
+    <p>RaceRide befindet sich derzeit in der Beta-Phase. Dieses Angebot richtet sich an Beta-Tester. Es handelt sich um ein privates Projekt.</p>
+    <h3>Streitschlichtung</h3>
+    <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr" target="_blank">https://ec.europa.eu/consumers/odr</a>. Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+  </div>
+</div>
+
+<!-- DATENSCHUTZ MODAL -->
+<div class="modal" id="modal-datenschutz">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('datenschutz')">&times;</button>
+    <h2>Datenschutzerklärung</h2>
+    <h3>1. Verantwortlicher</h3>
+    <p>Dennis Kieper<br>Benatzkyweg 19, 22145 Hamburg<br>E-Mail: <a href="mailto:racerideapp@gmail.com">racerideapp@gmail.com</a></p>
+    <h3>2. Welche Daten wir erheben</h3>
+    <p>Auf dieser Landing Page erheben wir ausschließlich E-Mail-Adressen, die freiwillig über das Anmeldeformular eingegeben werden. Weitere personenbezogene Daten werden nicht erhoben.</p>
+    <h3>3. Zweck der Datenerhebung</h3>
+    <p>Deine E-Mail-Adresse wird ausschließlich dazu verwendet, dich über neue Versionen und den Launch der RaceRide App zu informieren. Eine Weitergabe an Dritte erfolgt nicht.</p>
+    <h3>4. Dienstleister – Formspree</h3>
+    <p>Das Kontaktformular wird über Formspree (Formspree Inc., USA) betrieben. Formspree ist unter dem EU-US Data Privacy Framework zertifiziert. Weitere Infos: <a href="https://formspree.io/legal/privacy-policy" target="_blank">formspree.io/legal/privacy-policy</a></p>
+    <h3>5. Hosting – Netlify</h3>
+    <p>Diese Website wird über Netlify (Netlify Inc., USA) gehostet. Beim Aufruf der Seite werden technische Zugriffsdaten (IP-Adresse, Browsertyp, Zeitstempel) in Server-Logs gespeichert. Weitere Infos: <a href="https://www.netlify.com/privacy/" target="_blank">netlify.com/privacy</a></p>
+    <h3>6. Deine Rechte</h3>
+    <p>Du hast das Recht auf Auskunft, Berichtigung, Löschung und Widerspruch bezüglich deiner gespeicherten Daten. Wende dich dazu an: <a href="mailto:racerideapp@gmail.com">racerideapp@gmail.com</a></p>
+    <h3>7. GPS-Daten (App)</h3>
+    <p>Die RaceRide App verarbeitet GPS-Daten nur während aktiver Aufnahme. GPS-Zugriff ist in den Systemeinstellungen jederzeit deaktivierbar.</p>
+    <h3>8. Cookies</h3>
+    <p>Diese Landing Page verwendet keine Cookies und kein Tracking.</p>
+    <h3>9. Vollständige Datenschutzerklärung</h3>
+    <p>Die vollständige Datenschutzerklärung (inkl. App-Daten) findest du unter: <a href="datenschutz.html">datenschutz.html</a></p>
+  </div>
+</div>
+
+<script>
+function openModal(type) {
+  document.getElementById('modal-' + type).classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(type) {
+  document.getElementById('modal-' + type).classList.remove('active');
+  document.body.style.overflow = '';
+}
+window.addEventListener('click', function(e) {
+  ['impressum','datenschutz'].forEach(function(type) {
+    var modal = document.getElementById('modal-' + type);
+    if (e.target === modal) closeModal(type);
+  });
+});
+</script>
+
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/6a42d371b271bd1d477e8b0c/1jsagjt7m';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+</body>
+</html>
