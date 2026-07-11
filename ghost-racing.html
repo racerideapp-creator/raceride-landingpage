@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ghost-Racing erklärt – Gegen deine Bestzeit fahren | RaceRide</title>
+<meta name="description" content="Ghost-Racing bei RaceRide: Fahre live gegen deine eigene Bestzeit oder die eines Freundes, mit Sprach-Updates in Echtzeit. So funktioniert's.">
+<meta name="keywords" content="Ghost Racing, Ghost Racing App, Virtual Race Fahrrad, Race Every Ride, Segment Racing, gegen Bestzeit fahren">
+<meta property="og:title" content="Ghost-Racing erklärt – Gegen deine Bestzeit fahren">
+<meta property="og:description" content="Fahre live gegen deine eigene Bestzeit oder die eines Freundes – mit Sprach-Updates in Echtzeit. So funktioniert Ghost-Racing bei RaceRide.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://raceride.app/ghost-racing">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ghost-Racing erklärt – RaceRide">
+<meta name="twitter:description" content="Live gegen deine eigene Bestzeit oder die eines Freundes fahren, mit Sprach-Updates in Echtzeit.">
+<link rel="canonical" href="https://raceride.app/ghost-racing">
+<meta property="og:image" content="https://raceride.app/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:image" content="https://raceride.app/og-image.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "RaceRide",
+  "operatingSystem": "Android",
+  "applicationCategory": "SportsApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+  "description": "RaceRide macht aus jeder bekannten Strecke ein Live-Rennen gegen Freunde. GPS-Renn-App für alle Fahrradtypen."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Muss mein Freund gleichzeitig mit mir fahren?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Nein. Der Ghost basiert auf einer bereits aufgezeichneten Fahrt – deiner eigenen Bestzeit oder der eines Freundes. Ihr müsst nicht zur gleichen Zeit unterwegs sein, um gegeneinander zu fahren." }
+    },
+    {
+      "@type": "Question",
+      "name": "Wie genau ist die Zeitmessung beim Ghost-Racing?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Ein Kalman-Filter glättet GPS-Rauschen in Echtzeit, erkennt und verwirft Ausreißer und pausiert automatisch bei Stillstand – für eine präzise Positions- und Zeitbestimmung während des Rennens." }
+    },
+    {
+      "@type": "Question",
+      "name": "Ist Ghost-Racing kostenlos?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Ghost-Racing ist Teil des Pro-Plans (2,99 € im Monat, 20,99 € im Jahr oder 59,99 € als Lifetime-Option). Der Free-Plan bietet Streckenerstellung, Rangliste und GPX-Export dauerhaft kostenlos." }
+    },
+    {
+      "@type": "Question",
+      "name": "Funktioniert Ghost-Racing auch offline?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Kartenregionen lassen sich vorab herunterladen, sodass RaceRide auch ohne Netzverbindung nutzbar ist – praktisch für Trails im Funkloch. Aufgezeichnete Ghost-Fahrten synchronisieren sich, sobald wieder eine Verbindung besteht." }
+    }
+  ]
+}
+</script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --black:#111111;
+    --orange:#e85d00;
+    --orange-dark:#c24e00;
+    --orange-light:#ff7a1a;
+    --white:#ffffff;
+    --gray:#888888;
+    --surface:#1a1a1a;
+    --surface2:#222222;
+  }
+  html{scroll-behavior:smooth}
+  body{background:var(--black);color:var(--white);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;overflow-x:hidden}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;background:rgba(17,17,17,0.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.06)}
+  .logo{font-size:20px;font-weight:700;font-style:italic;letter-spacing:-0.5px;text-decoration:none;color:var(--white)}
+  .logo span{color:var(--orange)}
+  .nav-links{display:flex;align-items:center;gap:28px}
+  .nav-links a{color:rgba(255,255,255,0.55);text-decoration:none;font-size:14px;transition:color 0.2s}
+  .nav-links a:hover{color:var(--white)}
+  .nav-cta{background:var(--orange);color:var(--white)!important;border:none;padding:9px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;transition:background 0.2s}
+  .nav-cta:hover{background:var(--orange-dark)!important}
+
+  /* HERO */
+  .hero{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 80px;position:relative;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(232,93,0,0.12) 0%,transparent 70%);pointer-events:none}
+  .eyebrow{font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--orange);margin-bottom:20px}
+  .hero h1{font-size:clamp(32px,6vw,60px);font-weight:800;line-height:1.15;letter-spacing:-1.5px;margin-bottom:20px;font-style:italic;max-width:900px}
+  .hero h1 em{color:var(--orange);font-style:italic}
+  .hero-sub{font-size:17px;color:rgba(255,255,255,0.5);max-width:620px;margin:0 auto 40px;line-height:1.7}
+  .hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+  .btn-primary{background:var(--orange);color:var(--white);text-decoration:none;padding:16px 32px;border-radius:12px;font-size:16px;font-weight:700;transition:background 0.2s,transform 0.15s;display:inline-block}
+  .btn-primary:hover{background:var(--orange-dark);transform:translateY(-1px)}
+  .btn-secondary{background:rgba(255,255,255,0.07);color:var(--white);text-decoration:none;padding:16px 28px;border-radius:12px;font-size:16px;font-weight:600;border:1px solid rgba(255,255,255,0.12);transition:background 0.2s,transform 0.15s;display:inline-block}
+  .btn-secondary:hover{background:rgba(255,255,255,0.12);transform:translateY(-1px)}
+  .hero-note{font-size:12px;color:rgba(255,255,255,0.25)}
+
+  /* SECTIONS */
+  .section{padding:80px 24px;max-width:900px;margin:0 auto}
+  .section-label{font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--orange);margin-bottom:16px;text-align:center}
+  .section-title{font-size:clamp(26px,4vw,40px);font-weight:800;letter-spacing:-1px;text-align:center;margin-bottom:32px;font-style:italic}
+  .lead{font-size:16px;color:rgba(255,255,255,0.55);max-width:680px;margin:0 auto 40px;line-height:1.8;text-align:center}
+
+  /* STEPS */
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0;position:relative;margin-top:16px}
+  .steps::before{content:'';position:absolute;top:28px;left:8%;right:8%;height:1px;background:rgba(232,93,0,0.2)}
+  .step{text-align:center;padding:0 16px;position:relative}
+  .step-num{width:56px;height:56px;border-radius:50%;background:var(--orange);color:var(--white);font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;position:relative;z-index:1;font-style:italic}
+  .step h3{font-size:15px;font-weight:700;margin-bottom:8px}
+  .step p{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.5}
+
+  /* REASONS GRID */
+  .reasons{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2px;border:2px solid var(--surface2);border-radius:16px;overflow:hidden;margin-top:16px}
+  .reason{background:var(--surface);padding:32px}
+  .reason h3{font-size:16px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+  .reason h3 .ic{font-size:22px}
+  .reason p{font-size:13px;color:rgba(255,255,255,0.42);line-height:1.7}
+
+  /* FAQ */
+  .faq-item{background:var(--surface);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:12px;overflow:hidden}
+  .faq-item summary{padding:20px 24px;font-size:15px;font-weight:700;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;color:var(--white)}
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary::after{content:'+';color:var(--orange);font-size:22px;font-weight:400;flex-shrink:0;margin-left:16px}
+  .faq-item[open] summary::after{content:'–'}
+  .faq-item p{padding:0 24px 20px;font-size:14px;color:rgba(255,255,255,0.5);line-height:1.7}
+
+  /* CTA */
+  .cta{padding:80px 24px;text-align:center}
+  .cta h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1px;margin-bottom:16px;font-style:italic}
+  .cta p{font-size:15px;color:rgba(255,255,255,0.4);margin-bottom:32px;max-width:500px;margin-left:auto;margin-right:auto}
+  .email-form{display:flex;gap:10px;max-width:440px;width:100%;margin:0 auto 16px;flex-wrap:wrap;justify-content:center}
+  .email-form input{flex:1;min-width:220px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:14px 18px;color:var(--white);font-size:15px;outline:none;transition:border-color 0.2s}
+  .email-form input::placeholder{color:rgba(255,255,255,0.3)}
+  .email-form input:focus{border-color:var(--orange)}
+  .email-form button{background:var(--orange);color:var(--white);border:none;border-radius:10px;padding:14px 24px;font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background 0.2s}
+  .email-form button:hover{background:var(--orange-dark)}
+  .success-msg{display:none;background:rgba(232,93,0,0.15);border:1px solid rgba(232,93,0,0.3);border-radius:10px;padding:14px 20px;font-size:14px;color:var(--orange);margin-top:12px;text-align:center}
+
+  /* FOOTER */
+  footer{padding:48px 24px 32px;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+  .footer-logo{font-size:20px;font-weight:800;font-style:italic}
+  .footer-logo span{color:var(--orange)}
+  .footer-tagline{font-size:13px;color:rgba(255,255,255,0.25);font-style:italic}
+  footer .copy{font-size:12px;color:rgba(255,255,255,0.18)}
+  .footer-links{display:flex;gap:20px}
+  .footer-links a{font-size:12px;color:rgba(255,255,255,0.25);text-decoration:none}
+  .footer-links a:hover{color:rgba(255,255,255,0.5)}
+
+  /* MODAL */
+  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;overflow-y:auto;padding:40px 16px}
+  .modal.active{display:flex;align-items:flex-start;justify-content:center}
+  .modal-box{background:#1a1a1a;border:0.5px solid rgba(255,255,255,0.1);border-radius:16px;padding:32px;max-width:680px;width:100%;position:relative;margin:auto}
+  .modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:22px;cursor:pointer;line-height:1}
+  .modal-close:hover{color:#fff}
+  .modal h2{font-size:22px;font-weight:700;margin-bottom:20px;color:#fff}
+  .modal h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:#e85d00}
+  .modal p{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:10px}
+  .modal a{color:#e85d00}
+
+  @media(max-width:600px){
+    .nav-links{display:none}
+    .steps::before{display:none}
+    .hero-btns{flex-direction:column;align-items:center}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Race<span>Ride</span></a>
+  <div class="nav-links">
+    <a href="/#features">Features</a>
+    <a href="/#pricing">Preise</a>
+    <a href="#faq">FAQ</a>
+    <a href="/#beta-tester">Beta-Tester werden</a>
+    <a href="/#waitlist" class="nav-cta">Bald im Play Store</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="eyebrow">Killer-Feature · Live gegen die Bestzeit</div>
+  <h1>Was ist <em>Ghost-Racing?</em></h1>
+  <p class="hero-sub">Du fährst eine Strecke – und gegen dich fährt ein virtueller Geist: deine eigene Bestzeit oder die eines Freundes. In Echtzeit auf der Karte, mit Sprach-Updates ob du vorne liegst.</p>
+  <div class="hero-btns">
+    <a href="/#waitlist" class="btn-primary">Jetzt vormerken</a>
+    <a href="/#beta-tester" class="btn-secondary">Beta-Tester werden</a>
+  </div>
+  <p class="hero-note">Teil des Pro-Plans · Bald im Google Play Store</p>
+</section>
+
+<!-- SO FUNKTIONIERT'S -->
+<section class="section">
+  <div class="section-label">So funktioniert's</div>
+  <h2 class="section-title">In 4 Schritten zum Ghost-Race.</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Strecke wählen</h3>
+      <p>Eine eigene Strecke oder eine, die du oder ein Freund schon gefahren seid.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Ghost auswählen</h3>
+      <p>Deine eigene Bestzeit oder die Fahrt eines Freundes als virtuellen Gegner.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Losfahren</h3>
+      <p>Der Ghost bewegt sich in Echtzeit auf der Karte mit – als würde er wirklich neben dir fahren.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h3>Überholen</h3>
+      <p>Sprach-Updates sagen dir, ob du vorne liegst. Am Ende wartet dein Rekord-Zertifikat.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WARUM -->
+<section class="section">
+  <div class="section-label">Warum Ghost-Racing</div>
+  <h2 class="section-title">Mehr Motivation als reine Ranglisten.</h2>
+  <p class="lead">Segment-Ranglisten zeigen dir erst nach der Fahrt, wo du stehst. Ghost-Racing macht das Rennen selbst spürbar – während du fährst, nicht erst danach.</p>
+  <div class="reasons">
+    <div class="reason">
+      <h3><span class="ic">🏋️</span> Solo-Training</h3>
+      <p>Schlage deine eigene Bestzeit als Ghost. Perfekt, um dich allein zu pushen, ohne auf einen Trainingspartner angewiesen zu sein.</p>
+    </div>
+    <div class="reason">
+      <h3><span class="ic">🤝</span> Wettkampf ohne Termin</h3>
+      <p>Fordere einen Freund heraus, ohne gleichzeitig fahren zu müssen – sein Ghost wartet auf der Strecke, wann immer du Zeit hast.</p>
+    </div>
+    <div class="reason">
+      <h3><span class="ic">🗣️</span> Echtzeit-Feedback</h3>
+      <p>Sprach-Updates während der Fahrt statt einer Tabelle danach – du weißt sofort, ob du einen Gang zulegen musst.</p>
+    </div>
+    <div class="reason">
+      <h3><span class="ic">🏆</span> Rekord-Zertifikat</h3>
+      <p>Schlägst du den Ghost, gibt es ein teilbares Rekord-Zertifikat – guter Anlass, Freunde ebenfalls herauszufordern.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="section-label" style="text-align:center">Häufige Fragen</div>
+  <h2 class="section-title">Kurz erklärt.</h2>
+  <details class="faq-item">
+    <summary>Muss mein Freund gleichzeitig mit mir fahren?</summary>
+    <p>Nein. Der Ghost basiert auf einer bereits aufgezeichneten Fahrt – deiner eigenen Bestzeit oder der eines Freundes. Ihr müsst nicht zur gleichen Zeit unterwegs sein, um gegeneinander zu fahren.</p>
+  </details>
+  <details class="faq-item">
+    <summary>Wie genau ist die Zeitmessung beim Ghost-Racing?</summary>
+    <p>Ein Kalman-Filter glättet GPS-Rauschen in Echtzeit, erkennt und verwirft Ausreißer und pausiert automatisch bei Stillstand – für eine präzise Positions- und Zeitbestimmung während des Rennens.</p>
+  </details>
+  <details class="faq-item">
+    <summary>Ist Ghost-Racing kostenlos?</summary>
+    <p>Ghost-Racing ist Teil des Pro-Plans (2,99 € im Monat, 20,99 € im Jahr oder 59,99 € als Lifetime-Option). Der Free-Plan bietet Streckenerstellung, Rangliste und GPX-Export dauerhaft kostenlos.</p>
+  </details>
+  <details class="faq-item">
+    <summary>Funktioniert Ghost-Racing auch offline?</summary>
+    <p>Kartenregionen lassen sich vorab herunterladen, sodass RaceRide auch ohne Netzverbindung nutzbar ist – praktisch für Trails im Funkloch. Aufgezeichnete Ghost-Fahrten synchronisieren sich, sobald wieder eine Verbindung besteht.</p>
+  </details>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="waitlist">
+  <h2>Bald im Google Play Store.</h2>
+  <p>RaceRide durchläuft gerade die Play-Store-Freigabe. Trag dich ein und wir informieren dich, sobald die App offiziell öffentlich verfügbar ist.</p>
+  <form action="https://formspree.io/f/xrevodzg" method="POST" class="email-form" onsubmit="handleSubmit(event,'success-msg')">
+    <input type="email" name="email" placeholder="deine@email.de" required>
+    <button type="submit">Informiert bleiben</button>
+  </form>
+  <div class="success-msg" id="success-msg">🎉 Du bist dabei! Wir melden uns, sobald RaceRide im Play Store ist.</div>
+</section>
+
+<footer>
+  <a href="/" class="footer-logo">Race<span>Ride</span></a>
+  <div class="footer-tagline">Jede Strecke wird zur Rennstrecke.</div>
+  <div class="footer-links">
+    <a href="/">Startseite</a>
+    <a href="/alternative-zu-strava">Alternative zu Strava</a>
+    <a href="/datenschutz.html">Datenschutz</a>
+    <a href="#" onclick="openModal('impressum');return false;">Impressum</a>
+    <a href="mailto:racerideapp@gmail.com">Kontakt</a>
+  </div>
+  <p class="copy">© 2026 RaceRide · Ride fast. Race anywhere.</p>
+</footer>
+
+<script>
+function handleSubmit(e, msgId) {
+  e.preventDefault();
+  var form = e.target;
+  fetch(form.action, {
+    method: 'POST',
+    body: new FormData(form),
+    headers: { 'Accept': 'application/json' }
+  }).then(function(r) {
+    if(r.ok) {
+      form.style.display = 'none';
+      document.getElementById(msgId).style.display = 'block';
+    } else {
+      alert('Fehler – bitte versuche es nochmal.');
+    }
+  }).catch(function() { alert('Fehler – bitte versuche es nochmal.'); });
+}
+</script>
+
+<!-- IMPRESSUM MODAL -->
+<div class="modal" id="modal-impressum">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('impressum')">&times;</button>
+    <h2>Impressum</h2>
+    <h3>Angaben gemäß § 5 TMG</h3>
+    <p>Dennis Kieper<br>Benatzkyweg 19<br>22145 Hamburg<br>Deutschland</p>
+    <h3>Kontakt</h3>
+    <p>E-Mail: <a href="mailto:racerideapp@gmail.com">racerideapp@gmail.com</a></p>
+    <h3>Hinweis</h3>
+    <p>RaceRide befindet sich derzeit in der Beta-Phase. Dieses Angebot richtet sich an Beta-Tester. Es handelt sich um ein privates Projekt.</p>
+    <h3>Streitschlichtung</h3>
+    <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr" target="_blank">https://ec.europa.eu/consumers/odr</a>. Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+  </div>
+</div>
+
+<script>
+function openModal(type) {
+  document.getElementById('modal-' + type).classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(type) {
+  document.getElementById('modal-' + type).classList.remove('active');
+  document.body.style.overflow = '';
+}
+window.addEventListener('click', function(e) {
+  ['impressum'].forEach(function(type) {
+    var modal = document.getElementById('modal-' + type);
+    if (e.target === modal) closeModal(type);
+  });
+});
+</script>
+
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/6a42d371b271bd1d477e8b0c/1jsagjt7m';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+</body>
+</html>

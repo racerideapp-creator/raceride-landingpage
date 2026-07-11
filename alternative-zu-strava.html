@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RaceRide – Europäische Alternative zu Strava | GPS App</title>
+<meta name="description" content="RaceRide ist die europäische Alternative zu Strava: Server in Frankfurt, DSGVO-konform, alle Bike-Typen inkl. E-Bike gleichberechtigt. Kostenlos starten.">
+<meta name="keywords" content="Alternative zu Strava, Europäische Alternative zu Strava, Strava Alternative kostenlos, Strava Alternative Rennrad, DSGVO Fahrrad App">
+<meta property="og:title" content="RaceRide – Europäische Alternative zu Strava">
+<meta property="og:description" content="Kostenlos: Die Live-Racing-App fürs Fahrrad. Server in Frankfurt statt USA, alle Bike-Typen inkl. E-Bike gleichberechtigt.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://raceride.app/alternative-zu-strava">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RaceRide – Europäische Alternative zu Strava">
+<meta name="twitter:description" content="Server in Frankfurt, DSGVO-konform, alle Bike-Typen inkl. E-Bike. Die europäische Alternative zu Strava.">
+<link rel="canonical" href="https://raceride.app/alternative-zu-strava">
+<meta property="og:image" content="https://raceride.app/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:image" content="https://raceride.app/og-image.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "RaceRide",
+  "operatingSystem": "Android",
+  "applicationCategory": "SportsApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+  "description": "RaceRide macht aus jeder bekannten Strecke ein Live-Rennen gegen Freunde. GPS-Renn-App für alle Fahrradtypen."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Kann ich RaceRide und Strava gleichzeitig nutzen?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Ja, problemlos. RaceRide ersetzt Strava nicht zwangsläufig, sondern ergänzt es um Live-Racing und Ghost-Racing. Fahrten lassen sich als GPX oder FIT exportieren und z.B. zusätzlich bei Strava, Garmin Connect oder Apple Health speichern." }
+    },
+    {
+      "@type": "Question",
+      "name": "Wo werden meine Daten bei RaceRide gespeichert?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Auf Supabase-Servern in Frankfurt am Main, Deutschland. RaceRide ist DSGVO-konform und verwendet auf der Landing Page keine Cookies und kein Tracking. Strava als US-Unternehmen unterliegt anderen rechtlichen Rahmenbedingungen." }
+    },
+    {
+      "@type": "Question",
+      "name": "Ist RaceRide wirklich dauerhaft kostenlos?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Der Free-Plan ist dauerhaft kostenlos nutzbar: 3 Fahrten aufzeichnen, eigene Strecken erstellen, Rangliste ansehen, GPX-Export. Für unbegrenzte Fahrten, Ghost-Racing, Live-Tracking und Offline-Karten gibt es den Pro-Plan ab 2,99 € im Monat." }
+    },
+    {
+      "@type": "Question",
+      "name": "Was macht RaceRide anders als Strava für E-Bike-Fahrer?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Strava schließt E-Bike-Fahrten von Segment-Bestzeiten und Ranglisten aus. Bei RaceRide sind alle Bike-Typen inklusive E-Bike gleichberechtigt – E-Bike-Fahrer bekommen eigene Ranglisten und können ganz normal am Ghost-Racing teilnehmen." }
+    }
+  ]
+}
+</script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --black:#111111;
+    --orange:#e85d00;
+    --orange-dark:#c24e00;
+    --orange-light:#ff7a1a;
+    --white:#ffffff;
+    --gray:#888888;
+    --surface:#1a1a1a;
+    --surface2:#222222;
+  }
+  html{scroll-behavior:smooth}
+  body{background:var(--black);color:var(--white);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;overflow-x:hidden}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;background:rgba(17,17,17,0.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.06)}
+  .logo{font-size:20px;font-weight:700;font-style:italic;letter-spacing:-0.5px;text-decoration:none;color:var(--white)}
+  .logo span{color:var(--orange)}
+  .nav-links{display:flex;align-items:center;gap:28px}
+  .nav-links a{color:rgba(255,255,255,0.55);text-decoration:none;font-size:14px;transition:color 0.2s}
+  .nav-links a:hover{color:var(--white)}
+  .nav-cta{background:var(--orange);color:var(--white)!important;border:none;padding:9px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;transition:background 0.2s}
+  .nav-cta:hover{background:var(--orange-dark)!important}
+
+  /* HERO */
+  .hero{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 80px;position:relative;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(232,93,0,0.12) 0%,transparent 70%);pointer-events:none}
+  .eyebrow{font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--orange);margin-bottom:20px}
+  .hero h1{font-size:clamp(32px,6vw,60px);font-weight:800;line-height:1.15;letter-spacing:-1.5px;margin-bottom:20px;font-style:italic;max-width:900px}
+  .hero-sub{font-size:17px;color:rgba(255,255,255,0.5);max-width:620px;margin:0 auto 40px;line-height:1.7}
+  .hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+  .btn-primary{background:var(--orange);color:var(--white);text-decoration:none;padding:16px 32px;border-radius:12px;font-size:16px;font-weight:700;transition:background 0.2s,transform 0.15s;display:inline-block}
+  .btn-primary:hover{background:var(--orange-dark);transform:translateY(-1px)}
+  .btn-secondary{background:rgba(255,255,255,0.07);color:var(--white);text-decoration:none;padding:16px 28px;border-radius:12px;font-size:16px;font-weight:600;border:1px solid rgba(255,255,255,0.12);transition:background 0.2s,transform 0.15s;display:inline-block}
+  .btn-secondary:hover{background:rgba(255,255,255,0.12);transform:translateY(-1px)}
+  .hero-note{font-size:12px;color:rgba(255,255,255,0.25)}
+
+  /* SECTIONS */
+  .section{padding:80px 24px;max-width:900px;margin:0 auto}
+  .section-label{font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--orange);margin-bottom:16px;text-align:center}
+  .section-title{font-size:clamp(26px,4vw,40px);font-weight:800;letter-spacing:-1px;text-align:center;margin-bottom:32px;font-style:italic}
+  .lead{font-size:16px;color:rgba(255,255,255,0.55);max-width:680px;margin:0 auto 40px;line-height:1.8;text-align:center}
+
+  /* REASONS GRID */
+  .reasons{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2px;border:2px solid var(--surface2);border-radius:16px;overflow:hidden;margin-top:16px}
+  .reason{background:var(--surface);padding:32px}
+  .reason h3{font-size:16px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+  .reason h3 .ic{font-size:22px}
+  .reason p{font-size:13px;color:rgba(255,255,255,0.42);line-height:1.7}
+
+  /* VS TABLE (shared style with homepage) */
+  .vs-table{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;margin-top:16px}
+  .vs-table th{padding:16px 20px;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;font-weight:600}
+  .vs-table th:first-child{text-align:left;color:rgba(255,255,255,0.3);background:var(--surface)}
+  .vs-table th.us{background:var(--orange);color:var(--white)}
+  .vs-table th.them{background:var(--surface2);color:rgba(255,255,255,0.4)}
+  .vs-table td{padding:14px 20px;font-size:14px;border-top:1px solid rgba(255,255,255,0.05)}
+  .vs-table td:first-child{background:var(--surface);color:rgba(255,255,255,0.5)}
+  .vs-table td.us{background:rgba(232,93,0,0.06);text-align:center}
+  .vs-table td.them{background:var(--surface2);text-align:center;color:rgba(255,255,255,0.3)}
+  .check{color:var(--orange);font-size:18px}
+  .cross{color:rgba(255,255,255,0.15);font-size:18px}
+
+  /* FAQ */
+  .faq-item{background:var(--surface);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:12px;overflow:hidden}
+  .faq-item summary{padding:20px 24px;font-size:15px;font-weight:700;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;color:var(--white)}
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary::after{content:'+';color:var(--orange);font-size:22px;font-weight:400;flex-shrink:0;margin-left:16px}
+  .faq-item[open] summary::after{content:'–'}
+  .faq-item p{padding:0 24px 20px;font-size:14px;color:rgba(255,255,255,0.5);line-height:1.7}
+
+  /* CTA */
+  .cta{padding:80px 24px;text-align:center}
+  .cta h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1px;margin-bottom:16px;font-style:italic}
+  .cta p{font-size:15px;color:rgba(255,255,255,0.4);margin-bottom:32px;max-width:500px;margin-left:auto;margin-right:auto}
+  .email-form{display:flex;gap:10px;max-width:440px;width:100%;margin:0 auto 16px;flex-wrap:wrap;justify-content:center}
+  .email-form input{flex:1;min-width:220px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:14px 18px;color:var(--white);font-size:15px;outline:none;transition:border-color 0.2s}
+  .email-form input::placeholder{color:rgba(255,255,255,0.3)}
+  .email-form input:focus{border-color:var(--orange)}
+  .email-form button{background:var(--orange);color:var(--white);border:none;border-radius:10px;padding:14px 24px;font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background 0.2s}
+  .email-form button:hover{background:var(--orange-dark)}
+  .success-msg{display:none;background:rgba(232,93,0,0.15);border:1px solid rgba(232,93,0,0.3);border-radius:10px;padding:14px 20px;font-size:14px;color:var(--orange);margin-top:12px;text-align:center}
+
+  /* FOOTER */
+  footer{padding:48px 24px 32px;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+  .footer-logo{font-size:20px;font-weight:800;font-style:italic}
+  .footer-logo span{color:var(--orange)}
+  .footer-tagline{font-size:13px;color:rgba(255,255,255,0.25);font-style:italic}
+  footer .copy{font-size:12px;color:rgba(255,255,255,0.18)}
+  .footer-links{display:flex;gap:20px}
+  .footer-links a{font-size:12px;color:rgba(255,255,255,0.25);text-decoration:none}
+  .footer-links a:hover{color:rgba(255,255,255,0.5)}
+
+  /* MODAL */
+  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;overflow-y:auto;padding:40px 16px}
+  .modal.active{display:flex;align-items:flex-start;justify-content:center}
+  .modal-box{background:#1a1a1a;border:0.5px solid rgba(255,255,255,0.1);border-radius:16px;padding:32px;max-width:680px;width:100%;position:relative;margin:auto}
+  .modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:22px;cursor:pointer;line-height:1}
+  .modal-close:hover{color:#fff}
+  .modal h2{font-size:22px;font-weight:700;margin-bottom:20px;color:#fff}
+  .modal h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:#e85d00}
+  .modal p{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:10px}
+  .modal a{color:#e85d00}
+
+  @media(max-width:600px){
+    .nav-links{display:none}
+    .vs-table{font-size:12px}
+    .vs-table th,.vs-table td{padding:10px 12px}
+    .hero-btns{flex-direction:column;align-items:center}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Race<span>Ride</span></a>
+  <div class="nav-links">
+    <a href="/#features">Features</a>
+    <a href="/#pricing">Preise</a>
+    <a href="/#faq">FAQ</a>
+    <a href="/#beta-tester">Beta-Tester werden</a>
+    <a href="/#waitlist" class="nav-cta">Bald im Play Store</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="eyebrow">Strava Alternative · Europa · Kostenlos starten</div>
+  <h1>RaceRide – die europäische<br>Alternative zu Strava.</h1>
+  <p class="hero-sub">Server in Frankfurt statt in den USA. Alle Bike-Typen inklusive E-Bike gleichberechtigt. Ghost-Racing gegen Freunde in Echtzeit – Funktionen, die Strava so nicht bietet.</p>
+  <div class="hero-btns">
+    <a href="/#waitlist" class="btn-primary">Jetzt vormerken</a>
+    <a href="/#beta-tester" class="btn-secondary">Beta-Tester werden</a>
+  </div>
+  <p class="hero-note">Kostenlos · Bald im Google Play Store</p>
+</section>
+
+<!-- WARUM WECHSELN -->
+<section class="section">
+  <div class="section-label">Warum eine Alternative?</div>
+  <h2 class="section-title">Was RaceRide anders macht.</h2>
+  <p class="lead">Strava ist der Marktführer – zu Recht, mit starkem Social-Feature-Set. Für einige Radfahrer gibt es aber gute Gründe, sich nach einer Alternative umzusehen.</p>
+  <div class="reasons">
+    <div class="reason">
+      <h3><span class="ic">🔋</span> E-Bike-Bestzeiten</h3>
+      <p>Strava schließt E-Bike-Fahrten von Segment-Bestzeiten und Ranglisten aus. Bei RaceRide sind alle Antriebsarten gleichberechtigt – E-Bike-Fahrer bekommen eigene Ranglisten, statt außen vor zu bleiben.</p>
+    </div>
+    <div class="reason">
+      <h3><span class="ic">🇩🇪</span> Server in Deutschland</h3>
+      <p>Strava Inc. ist ein US-Unternehmen. RaceRide speichert Daten auf Supabase-Servern in Frankfurt am Main, DSGVO-konform, ohne Cookies oder Tracking auf der Landing Page.</p>
+    </div>
+    <div class="reason">
+      <h3><span class="ic">👻</span> Echtzeit statt nachträglich</h3>
+      <p>Strava-Segmente zeigen Ranglisten erst nach der Fahrt. Ghost-Racing bei RaceRide lässt dich live gegen deine eigene Bestzeit oder die eines Freundes fahren – mit Sprach-Updates während der Fahrt.</p>
+    </div>
+    <div class="reason">
+      <h3><span class="ic">💶</span> Fairer Einstieg</h3>
+      <p>Der Free-Plan ist dauerhaft nutzbar (Strecken erstellen, Rangliste, GPX-Export) statt einer reinen Testphase. Pro startet bei 2,99 € im Monat, mit Jahres- und Lifetime-Option.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VERGLEICH -->
+<section class="section">
+  <div class="section-label">Direkter Vergleich</div>
+  <h2 class="section-title">RaceRide vs. Strava.</h2>
+  <table class="vs-table">
+    <thead>
+      <tr>
+        <th style="text-align:left">Feature</th>
+        <th class="us">RaceRide</th>
+        <th class="them">Strava</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>E-Bike-Bestzeiten auf Ranglisten</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="cross">✗</span></td></tr>
+      <tr><td>Live-Ghost-Racing mit Sprach-Updates</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="cross">✗</span></td></tr>
+      <tr><td>Server-Standort</td><td class="us">Frankfurt, DE</td><td class="them">USA</td></tr>
+      <tr><td>Kostenloser Plan dauerhaft nutzbar</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="check">✓</span></td></tr>
+      <tr><td>GPX/FIT-Export kostenlos</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="cross">✗</span></td></tr>
+      <tr><td>Offline-Karten</td><td class="us"><span class="check">✓</span></td><td class="them"><span class="cross">✗</span></td></tr>
+      <tr><td>Eigene Streckenerstellung inkl. Rundkurs</td><td class="us"><span class="check">✓</span></td><td class="them">eingeschränkt</td></tr>
+      <tr><td>Etablierte Social-Community</td><td class="us">im Aufbau</td><td class="them"><span class="check">✓</span></td></tr>
+    </tbody>
+  </table>
+  <p style="text-align:center;font-size:12px;color:rgba(255,255,255,0.3);margin-top:16px">Stand 11.07.2026, basierend auf öffentlich bekannten Strava-Funktionen. Kein gesponserter Vergleich.</p>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="section-label" style="text-align:center">Häufige Fragen</div>
+  <h2 class="section-title">Kurz erklärt.</h2>
+  <details class="faq-item">
+    <summary>Kann ich RaceRide und Strava gleichzeitig nutzen?</summary>
+    <p>Ja, problemlos. RaceRide ersetzt Strava nicht zwangsläufig, sondern ergänzt es um Live-Racing und Ghost-Racing. Fahrten lassen sich als GPX oder FIT exportieren und z.B. zusätzlich bei Strava, Garmin Connect oder Apple Health speichern.</p>
+  </details>
+  <details class="faq-item">
+    <summary>Wo werden meine Daten bei RaceRide gespeichert?</summary>
+    <p>Auf Supabase-Servern in Frankfurt am Main, Deutschland. RaceRide ist DSGVO-konform und verwendet auf der Landing Page keine Cookies und kein Tracking. Strava als US-Unternehmen unterliegt anderen rechtlichen Rahmenbedingungen.</p>
+  </details>
+  <details class="faq-item">
+    <summary>Ist RaceRide wirklich dauerhaft kostenlos?</summary>
+    <p>Der Free-Plan ist dauerhaft kostenlos nutzbar: 3 Fahrten aufzeichnen, eigene Strecken erstellen, Rangliste ansehen, GPX-Export. Für unbegrenzte Fahrten, Ghost-Racing, Live-Tracking und Offline-Karten gibt es den Pro-Plan ab 2,99 € im Monat.</p>
+  </details>
+  <details class="faq-item">
+    <summary>Was macht RaceRide anders als Strava für E-Bike-Fahrer?</summary>
+    <p>Strava schließt E-Bike-Fahrten von Segment-Bestzeiten und Ranglisten aus. Bei RaceRide sind alle Bike-Typen inklusive E-Bike gleichberechtigt – E-Bike-Fahrer bekommen eigene Ranglisten und können ganz normal am Ghost-Racing teilnehmen.</p>
+  </details>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="waitlist">
+  <h2>Bald im Google Play Store.</h2>
+  <p>RaceRide durchläuft gerade die Play-Store-Freigabe. Trag dich ein und wir informieren dich, sobald die App offiziell öffentlich verfügbar ist.</p>
+  <form action="https://formspree.io/f/xrevodzg" method="POST" class="email-form" onsubmit="handleSubmit(event,'success-msg')">
+    <input type="email" name="email" placeholder="deine@email.de" required>
+    <button type="submit">Informiert bleiben</button>
+  </form>
+  <div class="success-msg" id="success-msg">🎉 Du bist dabei! Wir melden uns, sobald RaceRide im Play Store ist.</div>
+</section>
+
+<footer>
+  <a href="/" class="footer-logo">Race<span>Ride</span></a>
+  <div class="footer-tagline">Jede Strecke wird zur Rennstrecke.</div>
+  <div class="footer-links">
+    <a href="/">Startseite</a>
+    <a href="/ghost-racing">Ghost-Racing</a>
+    <a href="/datenschutz.html">Datenschutz</a>
+    <a href="#" onclick="openModal('impressum');return false;">Impressum</a>
+    <a href="mailto:racerideapp@gmail.com">Kontakt</a>
+  </div>
+  <p class="copy">© 2026 RaceRide · Ride fast. Race anywhere.</p>
+</footer>
+
+<script>
+function handleSubmit(e, msgId) {
+  e.preventDefault();
+  var form = e.target;
+  fetch(form.action, {
+    method: 'POST',
+    body: new FormData(form),
+    headers: { 'Accept': 'application/json' }
+  }).then(function(r) {
+    if(r.ok) {
+      form.style.display = 'none';
+      document.getElementById(msgId).style.display = 'block';
+    } else {
+      alert('Fehler – bitte versuche es nochmal.');
+    }
+  }).catch(function() { alert('Fehler – bitte versuche es nochmal.'); });
+}
+</script>
+
+<!-- IMPRESSUM MODAL -->
+<div class="modal" id="modal-impressum">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('impressum')">&times;</button>
+    <h2>Impressum</h2>
+    <h3>Angaben gemäß § 5 TMG</h3>
+    <p>Dennis Kieper<br>Benatzkyweg 19<br>22145 Hamburg<br>Deutschland</p>
+    <h3>Kontakt</h3>
+    <p>E-Mail: <a href="mailto:racerideapp@gmail.com">racerideapp@gmail.com</a></p>
+    <h3>Hinweis</h3>
+    <p>RaceRide befindet sich derzeit in der Beta-Phase. Dieses Angebot richtet sich an Beta-Tester. Es handelt sich um ein privates Projekt.</p>
+    <h3>Streitschlichtung</h3>
+    <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr" target="_blank">https://ec.europa.eu/consumers/odr</a>. Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+  </div>
+</div>
+
+<script>
+function openModal(type) {
+  document.getElementById('modal-' + type).classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(type) {
+  document.getElementById('modal-' + type).classList.remove('active');
+  document.body.style.overflow = '';
+}
+window.addEventListener('click', function(e) {
+  ['impressum'].forEach(function(type) {
+    var modal = document.getElementById('modal-' + type);
+    if (e.target === modal) closeModal(type);
+  });
+});
+</script>
+
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/6a42d371b271bd1d477e8b0c/1jsagjt7m';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+</body>
+</html>
