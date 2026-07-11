@@ -13,6 +13,11 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="RaceRide — Ride fast. Race anywhere.">
 <meta name="twitter:description" content="Ghost-Racing, Live-Tracking, Kalman-GPS, Offline-Karten. Die Fahrrad-App für echte Fahrer.">
+<link rel="canonical" href="https://raceride.app/">
+<meta property="og:image" content="https://raceride.app/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="800">
+<meta name="twitter:image" content="https://raceride.app/og-image.jpg">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -21,8 +26,40 @@
   "operatingSystem": "Android",
   "applicationCategory": "SportsApplication",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
-  "description": "RaceRide macht aus jeder bekannten Strecke ein Live-Rennen gegen Freunde. GPS-Renn-App für alle Fahrradtypen.",
-  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "ratingCount": "1" }
+  "description": "RaceRide macht aus jeder bekannten Strecke ein Live-Rennen gegen Freunde. GPS-Renn-App für alle Fahrradtypen."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Ist RaceRide eine Alternative zu Strava?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Ja. RaceRide bietet zusätzlich zu GPS-Tracking und Ranglisten ein Live-Rennen in Echtzeit gegen Freunde sowie Ghost-Racing gegen deine eigene Bestzeit – Funktionen, die Strava so nicht anbietet. Anders als bei Strava sind bei RaceRide außerdem alle Bike-Typen inklusive E-Bike gleichberechtigt." }
+    },
+    {
+      "@type": "Question",
+      "name": "Funktioniert RaceRide mit jedem E-Bike?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Ja, RaceRide funktioniert herstellerunabhängig mit jedem E-Bike-Antrieb (z.B. Bosch, Shimano, Yamaha) und auch ohne Motor – im Gegensatz zu Apps, die nur mit einem bestimmten Antriebssystem funktionieren." }
+    },
+    {
+      "@type": "Question",
+      "name": "Kann ich RaceRide auch offline nutzen?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Ja. Du kannst Kartenregionen vorab herunterladen und RaceRide auch ohne Netzverbindung nutzen – praktisch für Trails im Funkloch." }
+    },
+    {
+      "@type": "Question",
+      "name": "Sind meine Daten bei RaceRide sicher (DSGVO)?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Ja. RaceRide speichert Daten auf Supabase-Servern in Frankfurt, Deutschland, ist DSGVO-konform und verwendet auf der Landing Page keine Cookies und kein Tracking." }
+    },
+    {
+      "@type": "Question",
+      "name": "Was kostet RaceRide?",
+      "acceptedAnswer": { "@type": "Answer", "text": "RaceRide ist mit dem Free-Plan dauerhaft kostenlos nutzbar (3 Fahrten, Strecken erstellen, Rangliste, GPX-Export). Pro kostet 2,99 € im Monat oder 20,99 € im Jahr, alternativ gibt es eine Lifetime-Option für 59,99 €." }
+    }
+  ]
 }
 </script>
 <style>
@@ -139,6 +176,15 @@
   .step h3{font-size:16px;font-weight:700;margin-bottom:8px}
   .step p{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.5}
 
+  /* FAQ */
+  .faq{padding:80px 24px;max-width:800px;margin:0 auto}
+  .faq-item{background:var(--surface);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:12px;overflow:hidden}
+  .faq-item summary{padding:20px 24px;font-size:15px;font-weight:700;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;color:var(--white)}
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary::after{content:'+';color:var(--orange);font-size:22px;font-weight:400;flex-shrink:0;margin-left:16px}
+  .faq-item[open] summary::after{content:'–'}
+  .faq-item p{padding:0 24px 20px;font-size:14px;color:rgba(255,255,255,0.5);line-height:1.7}
+
   /* PRICING */
   .pricing{padding:100px 24px;max-width:900px;margin:0 auto}
   .plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:48px}
@@ -215,6 +261,8 @@
     <a href="#compat">Kompatibel</a>
     <a href="#community">Community</a>
     <a href="#pricing">Preise</a>
+    <a href="#faq">FAQ</a>
+    <a href="#beta-tester">Beta-Tester werden</a>
     <a href="#waitlist" class="nav-cta">Bald im Play Store</a>
   </div>
 </nav>
@@ -389,7 +437,7 @@
 <section class="vs">
   <div class="section-label">Der Vergleich</div>
   <h2 class="section-title" style="text-align:center;margin-bottom:16px;font-style:italic">Warum RaceRide?</h2>
-  <p style="text-align:center;color:rgba(255,255,255,0.45);font-size:15px;max-width:600px;margin:0 auto 40px;line-height:1.7">Strava hat E-Bike Bestzeiten verboten. Flow läuft nur mit Bosch. Komoot stirbt offline. Wir haben genug gezahlt für Apps die uns nicht ernst nehmen – RaceRide ist für Fahrer gebaut, von Fahrern.</p>
+  <p style="text-align:center;color:rgba(255,255,255,0.45);font-size:15px;max-width:600px;margin:0 auto 40px;line-height:1.7">Auf der Suche nach einer <strong style="color:rgba(255,255,255,0.65)">Strava Alternative</strong>? Strava hat E-Bike Bestzeiten verboten. Flow läuft nur mit Bosch. Komoot stirbt offline. Wir haben genug gezahlt für Apps die uns nicht ernst nehmen – RaceRide ist für Fahrer gebaut, von Fahrern.</p>
   <table class="vs-table">
     <thead>
       <tr>
@@ -468,6 +516,32 @@
   </div>
 </section>
 
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="section-label" style="text-align:center">Häufige Fragen</div>
+  <h2 class="section-title">Kurz erklärt.</h2>
+  <details class="faq-item">
+    <summary>Ist RaceRide eine Alternative zu Strava?</summary>
+    <p>Ja. RaceRide bietet zusätzlich zu GPS-Tracking und Ranglisten ein Live-Rennen in Echtzeit gegen Freunde sowie Ghost-Racing gegen deine eigene Bestzeit – Funktionen, die Strava so nicht anbietet. Anders als bei Strava sind bei RaceRide außerdem alle Bike-Typen inklusive E-Bike gleichberechtigt.</p>
+  </details>
+  <details class="faq-item">
+    <summary>Funktioniert RaceRide mit jedem E-Bike?</summary>
+    <p>Ja, RaceRide funktioniert herstellerunabhängig mit jedem E-Bike-Antrieb (z.B. Bosch, Shimano, Yamaha) und auch ohne Motor – im Gegensatz zu Apps, die nur mit einem bestimmten Antriebssystem funktionieren.</p>
+  </details>
+  <details class="faq-item">
+    <summary>Kann ich RaceRide auch offline nutzen?</summary>
+    <p>Ja. Du kannst Kartenregionen vorab herunterladen und RaceRide auch ohne Netzverbindung nutzen – praktisch für Trails im Funkloch.</p>
+  </details>
+  <details class="faq-item">
+    <summary>Sind meine Daten bei RaceRide sicher (DSGVO)?</summary>
+    <p>Ja. RaceRide speichert Daten auf Supabase-Servern in Frankfurt, Deutschland, ist DSGVO-konform und verwendet auf der Landing Page keine Cookies und kein Tracking.</p>
+  </details>
+  <details class="faq-item">
+    <summary>Was kostet RaceRide?</summary>
+    <p>RaceRide ist mit dem Free-Plan dauerhaft kostenlos nutzbar (3 Fahrten, Strecken erstellen, Rangliste, GPX-Export). Pro kostet 2,99 € im Monat oder 20,99 € im Jahr, alternativ gibt es eine Lifetime-Option für 59,99 €.</p>
+  </details>
+</section>
+
 <!-- PRICING -->
 <section class="pricing" id="pricing">
   <div class="section-label" style="text-align:center">Preise</div>
@@ -520,10 +594,23 @@
   </div>
 </section>
 
+<!-- CTA / BETA TESTER -->
+<section class="cta" id="beta-tester">
+  <h2>Werde Beta-Tester.</h2>
+  <p>RaceRide läuft aktuell im internen Test-Track der Google Play Console. Damit wir dich dort freischalten können, brauchen wir deinen Namen und die E-Mail-Adresse deines Google-Kontos — genau die, mit der du im Play Store angemeldet bist.</p>
+  <form action="https://formspree.io/f/xrevodzg" method="POST" class="email-form" style="max-width:560px" onsubmit="handleSubmit(event,'beta-success-msg')">
+    <input type="hidden" name="_subject" value="RaceRide Beta-Tester Anmeldung">
+    <input type="text" name="name" placeholder="Dein Name" required>
+    <input type="email" name="google_email" placeholder="deine@gmail.com (Google-Konto)" required>
+    <button type="submit">Als Tester anmelden</button>
+  </form>
+  <div class="success-msg" id="beta-success-msg">🎉 Danke! Wir schalten dich in Kürze für den internen Test in der Play Console frei — du bekommst eine Einladung per E-Mail.</div>
+</section>
+
 <!-- CTA / WAITLIST -->
 <section class="cta" id="waitlist">
   <h2>Bald im Google Play Store.</h2>
-  <p>RaceRide durchläuft gerade die Play-Store-Freigabe. Trag dich ein und wir informieren dich, sobald die App offiziell verfügbar ist.</p>
+  <p>RaceRide durchläuft gerade die Play-Store-Freigabe. Trag dich ein und wir informieren dich, sobald die App offiziell öffentlich verfügbar ist.</p>
   <form action="https://formspree.io/f/xrevodzg" method="POST" class="email-form" onsubmit="handleSubmit(event,'success-msg')">
     <input type="email" name="email" placeholder="deine@email.de" required>
     <button type="submit">Informiert bleiben</button>
@@ -585,9 +672,9 @@ function handleSubmit(e, msgId) {
     <h3>1. Verantwortlicher</h3>
     <p>Dennis Kieper<br>Benatzkyweg 19, 22145 Hamburg<br>E-Mail: <a href="mailto:racerideapp@gmail.com">racerideapp@gmail.com</a></p>
     <h3>2. Welche Daten wir erheben</h3>
-    <p>Auf dieser Landing Page erheben wir ausschließlich E-Mail-Adressen, die freiwillig über das Anmeldeformular eingegeben werden. Weitere personenbezogene Daten werden nicht erhoben.</p>
+    <p>Auf dieser Landing Page erheben wir E-Mail-Adressen, die freiwillig über das Waitlist-Formular eingegeben werden, sowie – über das Beta-Tester-Formular – Name und die E-Mail-Adresse deines Google-Kontos. Weitere personenbezogene Daten werden nicht erhoben.</p>
     <h3>3. Zweck der Datenerhebung</h3>
-    <p>Deine E-Mail-Adresse wird ausschließlich dazu verwendet, dich über neue Versionen und den Launch der RaceRide App zu informieren. Eine Weitergabe an Dritte erfolgt nicht.</p>
+    <p>Die Waitlist-E-Mail-Adresse wird ausschließlich dazu verwendet, dich über neue Versionen und den Launch der RaceRide App zu informieren. Name und Google-Konto-E-Mail aus dem Beta-Tester-Formular verwenden wir, um dich manuell als Tester in den internen Test-Track der Google Play Console einzutragen; dazu wird deine Google-Konto-E-Mail-Adresse in der Tester-Verwaltung der Play Console (Google) hinterlegt. Eine Weitergabe an sonstige Dritte erfolgt nicht.</p>
     <h3>4. Dienstleister – Formspree</h3>
     <p>Das Kontaktformular wird über Formspree (Formspree Inc., USA) betrieben. Formspree ist unter dem EU-US Data Privacy Framework zertifiziert. Weitere Infos: <a href="https://formspree.io/legal/privacy-policy" target="_blank">formspree.io/legal/privacy-policy</a></p>
     <h3>5. Hosting – Cloudflare Pages</h3>
