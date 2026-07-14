@@ -3,12 +3,10 @@
 # Social-Bio-Links (302 Redirect zum Anker auf der Startseite)
 /beta-tester /#beta-tester 302
 
-# Rewrite (Status 200): URL im Browser bleibt /live/{token}, intern wird
-# livepage.html?token={token} ausgeliefert. Das File heisst bewusst
-# livepage.html (nicht live.html oder live/index.html), weil beide
-# vorher zu Redirect-Loops fuehrten: Cloudflare Pages 308-strippt sowohl
-# .html als auch trailing /index.html, wodurch /live und /live/ jeweils
-# wieder in die eigene /live/*-Rewrite-Regel fielen (endloser Kreis).
-# Ein Rewrite-Target ausserhalb des /live/-Namespaces bricht den Kreis.
-/live       /livepage                 200
-/live/*     /livepage?token=:splat    200
+# /live und /live/{token} werden von Cloudflare Pages Functions
+# (functions/live/[token].js + functions/live/index.js) behandelt —
+# hier absichtlich KEINE _redirects-Rewrite-Regel dafuer: Functions
+# greifen vor der statischen Asset-Aufloesung UND vor _redirects,
+# die haben keinen Namens-Overlap-Konflikt mit .html-Dateien im Root
+# und keine Clean-URL-Kanonisierungs-Kollision (siehe Session-Log
+# 2026-07-14: vier vorherige _redirects-Anlaeufe scheiterten daran).

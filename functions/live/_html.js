@@ -1,4 +1,25 @@
-<!DOCTYPE html>
+// Zentrale HTML-Vorlage fuer die oeffentliche Live-Verfolgungs-Ansicht.
+// Von functions/live/[token].js und functions/live/index.js importiert.
+// Dateiname beginnt mit "_" -> Cloudflare Pages behandelt sie NICHT als
+// Route (nur als importierbares Modul), so wird sie nicht selbst unter
+// /live/_html.js erreichbar.
+//
+// Warum ueberhaupt Functions statt _redirects+livepage.html?
+// Cloudflare Pages Clean-URL-Kanonisierung (Auto-Strip von .html und
+// /index.html) kollidiert grundsaetzlich mit jedem _redirects-Rewrite,
+// dessen Match-Pfad einen Namens-Praefix mit einer echten statischen
+// Datei teilt — 4 Iterationen an File-/Ordnernamen (live.html ->
+// live/index.html -> livepage.html) waren jeweils Symptomlinderung,
+// nie Ursachenbehebung. Functions laufen VOR der Asset-Aufloesung und
+// haben keinen Namens-Overlap-Konflikt.
+//
+// Token wird bewusst NICHT serverseitig ins HTML eingesetzt: das JS
+// unten liest ihn aus window.location.pathname (Regex `/\/live\/(...)/`)
+// oder Query-Param `?token=`, damit die Seite auch bei manuell mit
+// Query aufgerufener URL funktioniert und wir keinen Escape-Path fuer
+// Token-Interpolation brauchen.
+
+export const LIVE_HTML = `<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -49,7 +70,6 @@
   #header a span{color:var(--orange)}
 
   #map{position:absolute;top:0;left:0;right:0;bottom:0;background:#0a0a0a}
-  /* Leaflet-Attribution in dunklem Design lesbar */
   .leaflet-control-attribution{
     background:rgba(17,17,17,0.7) !important;
     color:#aaa !important;
@@ -119,7 +139,6 @@
   }
   #overlay.hidden{display:none}
 
-  /* Custom marker: orange puck + weißer Rand + Pulse-Ring */
   .rider-marker{
     width:22px;height:22px;border-radius:50%;
     background:var(--orange);border:3px solid var(--white);
@@ -184,13 +203,11 @@
     document.getElementById('overlay').classList.add('hidden');
   }
 
-  // Token entweder aus ?token=... oder aus /live/{token} (per _redirects rewrite)
   function getToken(){
     var qs = new URLSearchParams(window.location.search);
     var t = qs.get('token');
     if (t) return t.trim();
-    // Fallback fuer direkten Zugriff auf /live/<token>.html oder /live/<token>
-    var m = window.location.pathname.match(/\/live\/([^/?#]+)/);
+    var m = window.location.pathname.match(/\\/live\\/([^/?#]+)/);
     if (m) return decodeURIComponent(m[1]).trim();
     return null;
   }
@@ -205,8 +222,7 @@
     return;
   }
 
-  // Karte initialisieren, aber noch nicht anzeigen bis erster Fix da ist
-  var map = L.map('map', {zoomControl:true, attributionControl:true}).setView([53.5511, 9.9937], 13); // Hamburg default
+  var map = L.map('map', {zoomControl:true, attributionControl:true}).setView([53.5511, 9.9937], 13);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -214,10 +230,9 @@
 
   var marker = null;
   var lastLat = null, lastLng = null;
-  var followUser = true; // Solange der User die Karte nicht selbst bewegt hat, folgen wir
+  var followUser = true;
   map.on('dragstart', function(){ followUser = false; });
   map.on('zoomstart', function(e){
-    // Nur unterbrechen, wenn User selbst gezoomt hat, nicht bei programmatic setView
     if (e && e.hard === undefined && document.activeElement !== document.body) followUser = false;
   });
 
@@ -278,7 +293,6 @@
     })
     .then(function(data){
       consecutiveErrors = 0;
-      // RPC gibt TABLE zurueck -> Array; ein einzelner scalar row-return waere Objekt.
       var row = Array.isArray(data) ? data[0] : data;
       if (!row){
         showOverlay(
@@ -293,7 +307,7 @@
       var lat = Number(row.latitude);
       var lng = Number(row.longitude);
       var speed = row.speed_kmh == null ? null : Number(row.speed_kmh);
-      var isActive = row.is_active !== false; // null wird als aktiv gewertet, nur explizit false ist beendet
+      var isActive = row.is_active !== false;
       var username = row.username || 'Anonym';
 
       document.getElementById('card').style.display = 'block';
@@ -345,14 +359,12 @@
         stopPolling();
         return;
       }
-      // Sanftes Backoff: 5s, 5s, 10s, 10s, 20s, 20s
       schedulePoll(consecutiveErrors <= 2 ? POLL_MS : (consecutiveErrors <= 4 ? POLL_MS * 2 : POLL_MS * 4));
     });
   }
 
   poll();
 
-  // Bei Sichtbarkeit wieder direkt einen Poll ausloesen (Handy aus Standby)
   document.addEventListener('visibilitychange', function(){
     if (document.visibilityState === 'visible' && !stopped){
       schedulePoll(0);
@@ -361,4 +373,4 @@
 })();
 </script>
 </body>
-</html>
+</html>`;
