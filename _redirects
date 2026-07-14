@@ -4,10 +4,9 @@
 /beta-tester /#beta-tester 302
 
 # Rewrite (Status 200): URL im Browser bleibt /live/{token}, intern wird
-# live.html?token={token} ausgeliefert. So funktioniert der geteilte
-# https://raceride.app/live/{TOKEN}-Link ohne Query-Param-Krücke.
-# Splat-Syntax statt :token-Placeholder, weil Cloudflare Pages sonst
-# /live/{anything} auf den existierenden /live.html-Asset (Datei-URL
-# ohne .html-Endung: /live) 308-normalisiert, bevor die Rewrite-Regel
-# feuert — mit /live/* + :splat greift die Regel vorher.
-/live/*  /live.html?token=:splat  200
+# /live/index.html?token={token} ausgeliefert. Die Seite liegt bewusst
+# unter live/index.html (nicht live.html im Root), weil Cloudflare Pages
+# sonst /live/{anything} auf /live 308-normalisiert (Kollision zwischen
+# statischem Asset /live und Präfix-Namespace /live/), bevor _redirects
+# überhaupt geprüft wird — im Ordner-Layout gibts diese Kollision nicht.
+/live/*  /live/index.html?token=:splat  200
