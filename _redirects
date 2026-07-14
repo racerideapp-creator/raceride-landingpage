@@ -4,9 +4,11 @@
 /beta-tester /#beta-tester 302
 
 # Rewrite (Status 200): URL im Browser bleibt /live/{token}, intern wird
-# /live/index.html?token={token} ausgeliefert. Die Seite liegt bewusst
-# unter live/index.html (nicht live.html im Root), weil Cloudflare Pages
-# sonst /live/{anything} auf /live 308-normalisiert (Kollision zwischen
-# statischem Asset /live und Präfix-Namespace /live/), bevor _redirects
-# überhaupt geprüft wird — im Ordner-Layout gibts diese Kollision nicht.
-/live/*  /live/index.html?token=:splat  200
+# livepage.html?token={token} ausgeliefert. Das File heisst bewusst
+# livepage.html (nicht live.html oder live/index.html), weil beide
+# vorher zu Redirect-Loops fuehrten: Cloudflare Pages 308-strippt sowohl
+# .html als auch trailing /index.html, wodurch /live und /live/ jeweils
+# wieder in die eigene /live/*-Rewrite-Regel fielen (endloser Kreis).
+# Ein Rewrite-Target ausserhalb des /live/-Namespaces bricht den Kreis.
+/live       /livepage.html                 200
+/live/*     /livepage.html?token=:splat    200
