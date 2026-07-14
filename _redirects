@@ -6,4 +6,8 @@
 # Rewrite (Status 200): URL im Browser bleibt /live/{token}, intern wird
 # live.html?token={token} ausgeliefert. So funktioniert der geteilte
 # https://raceride.app/live/{TOKEN}-Link ohne Query-Param-Krücke.
-/live/:token  /live.html?token=:token  200
+# Splat-Syntax statt :token-Placeholder, weil Cloudflare Pages sonst
+# /live/{anything} auf den existierenden /live.html-Asset (Datei-URL
+# ohne .html-Endung: /live) 308-normalisiert, bevor die Rewrite-Regel
+# feuert — mit /live/* + :splat greift die Regel vorher.
+/live/*  /live.html?token=:splat  200
