@@ -1,1 +1,9 @@
+# Cloudflare Pages redirects/rewrites
+
+# Social-Bio-Links (302 Redirect zum Anker auf der Startseite)
 /beta-tester /#beta-tester 302
+
+# Rewrite (Status 200): URL im Browser bleibt /live/{token}, intern wird
+# live.html?token={token} ausgeliefert. So funktioniert der geteilte
+# https://raceride.app/live/{TOKEN}-Link ohne Query-Param-Krücke.
+/live/:token  /live.html?token=:token  200

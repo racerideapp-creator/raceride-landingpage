@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Live-Verfolgung — RaceRide</title>
+<meta name="description" content="Verfolge eine RaceRide-Fahrt in Echtzeit auf der Karte. Kein Login, keine App-Installation nötig.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://raceride.app/live">
+<meta property="og:title" content="Live-Verfolgung — RaceRide">
+<meta property="og:description" content="Verfolge eine RaceRide-Fahrt in Echtzeit auf der Karte.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin="">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --black:#111111;
+    --orange:#e85d00;
+    --orange-dark:#c24e00;
+    --white:#ffffff;
+    --gray:#888888;
+    --surface:#1a1a1a;
+    --surface2:#222222;
+    --green:#3ecc5f;
+    --red:#cc2222;
+  }
+  html,body{height:100%}
+  body{
+    background:var(--black);
+    color:var(--white);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    line-height:1.4;
+    overflow:hidden;
+  }
+
+  #header{
+    position:fixed;top:0;left:0;right:0;z-index:1000;
+    padding:12px 16px;
+    background:linear-gradient(180deg,rgba(17,17,17,0.92) 0%,rgba(17,17,17,0.6) 80%,rgba(17,17,17,0) 100%);
+    display:flex;align-items:center;justify-content:space-between;
+    pointer-events:none;
+  }
+  #header a{
+    color:var(--white);text-decoration:none;font-size:20px;font-weight:800;letter-spacing:1px;font-style:italic;
+    pointer-events:auto;
+  }
+  #header a span{color:var(--orange)}
+
+  #map{position:absolute;top:0;left:0;right:0;bottom:0;background:#0a0a0a}
+  /* Leaflet-Attribution in dunklem Design lesbar */
+  .leaflet-control-attribution{
+    background:rgba(17,17,17,0.7) !important;
+    color:#aaa !important;
+    font-size:10px;
+  }
+  .leaflet-control-attribution a{color:var(--orange) !important}
+
+  #card{
+    position:fixed;left:0;right:0;bottom:0;z-index:1000;
+    padding:16px 18px 22px;
+    background:linear-gradient(180deg,rgba(17,17,17,0) 0%,rgba(17,17,17,0.85) 20%,rgba(17,17,17,0.95) 100%);
+  }
+  #card .inner{
+    max-width:520px;margin:0 auto;
+    background:var(--surface);border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px;padding:14px 16px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  }
+  #card .row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  #card .name{font-size:17px;font-weight:700;color:var(--white)}
+  #card .status{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:12px;font-weight:600;
+    padding:4px 10px;border-radius:999px;
+    background:rgba(62,204,95,0.15);color:var(--green);
+    border:1px solid rgba(62,204,95,0.3);
+  }
+  #card .status.ended{
+    background:rgba(204,34,34,0.15);color:var(--red);
+    border-color:rgba(204,34,34,0.3);
+  }
+  #card .status .dot{
+    width:8px;height:8px;border-radius:50%;background:currentColor;
+    box-shadow:0 0 0 0 currentColor;
+    animation:pulse 1.8s infinite;
+  }
+  #card .status.ended .dot{animation:none}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(62,204,95,0.7)}
+    70%{box-shadow:0 0 0 10px rgba(62,204,95,0)}
+    100%{box-shadow:0 0 0 0 rgba(62,204,95,0)}
+  }
+  #card .stats{display:flex;gap:18px;margin-top:10px;font-size:14px;color:var(--gray)}
+  #card .stats b{color:var(--white);font-size:18px;font-weight:700;display:block}
+  #card .cta{
+    display:block;margin-top:12px;text-align:center;
+    padding:12px 14px;border-radius:12px;
+    background:transparent;color:var(--orange);
+    border:1px solid var(--orange);
+    text-decoration:none;font-weight:700;font-size:14px;
+  }
+  #card .cta:hover{background:rgba(232,93,0,0.1)}
+
+  #overlay{
+    position:fixed;top:0;left:0;right:0;bottom:0;z-index:2000;
+    background:rgba(17,17,17,0.94);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:24px;text-align:center;
+  }
+  #overlay h1{font-size:22px;margin-bottom:8px}
+  #overlay p{color:var(--gray);font-size:15px;max-width:360px;line-height:1.55}
+  #overlay .cta{
+    display:inline-block;margin-top:20px;
+    padding:12px 22px;border-radius:12px;
+    background:var(--orange);color:var(--white);
+    text-decoration:none;font-weight:700;font-size:14px;
+  }
+  #overlay.hidden{display:none}
+
+  /* Custom marker: orange puck + weißer Rand + Pulse-Ring */
+  .rider-marker{
+    width:22px;height:22px;border-radius:50%;
+    background:var(--orange);border:3px solid var(--white);
+    box-shadow:0 2px 6px rgba(0,0,0,0.5);
+    position:relative;
+  }
+  .rider-marker::after{
+    content:'';position:absolute;inset:-8px;border-radius:50%;
+    border:2px solid var(--orange);opacity:0.7;
+    animation:markerpulse 1.8s infinite;
+  }
+  @keyframes markerpulse{
+    0%{transform:scale(0.7);opacity:0.9}
+    100%{transform:scale(1.6);opacity:0}
+  }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <a href="/">Race<span>Ride</span></a>
+</div>
+
+<div id="map"></div>
+
+<div id="card" style="display:none">
+  <div class="inner">
+    <div class="row">
+      <div class="name" id="name">…</div>
+      <div class="status" id="status"><span class="dot"></span><span id="status-text">Live</span></div>
+    </div>
+    <div class="stats">
+      <div><b id="speed">–</b>km/h</div>
+      <div><b id="ago">–</b>Update</div>
+    </div>
+    <a class="cta" href="/">RaceRide selbst installieren →</a>
+  </div>
+</div>
+
+<div id="overlay" class="hidden">
+  <h1 id="overlay-title">…</h1>
+  <p id="overlay-text">…</p>
+  <a class="cta" id="overlay-cta" href="/">Zur RaceRide-Startseite</a>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+<script>
+(function(){
+  var SUPABASE_URL = 'https://rywxsvamtciqyycwbcer.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5d3hzdmFtdGNpcXl5Y3diY2VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNDA3NzMsImV4cCI6MjA5NjkxNjc3M30.tr-lrOWGQu2aaRqtDxNNDHPybPr96-G1lafCchfyu04';
+  var POLL_MS = 5000;
+
+  function showOverlay(title, text, ctaText){
+    document.getElementById('overlay-title').textContent = title;
+    document.getElementById('overlay-text').textContent = text;
+    if (ctaText){ document.getElementById('overlay-cta').textContent = ctaText; }
+    document.getElementById('overlay').classList.remove('hidden');
+  }
+  function hideOverlay(){
+    document.getElementById('overlay').classList.add('hidden');
+  }
+
+  // Token entweder aus ?token=... oder aus /live/{token} (per _redirects rewrite)
+  function getToken(){
+    var qs = new URLSearchParams(window.location.search);
+    var t = qs.get('token');
+    if (t) return t.trim();
+    // Fallback fuer direkten Zugriff auf /live/<token>.html oder /live/<token>
+    var m = window.location.pathname.match(/\/live\/([^/?#]+)/);
+    if (m) return decodeURIComponent(m[1]).trim();
+    return null;
+  }
+
+  var token = getToken();
+  if (!token){
+    showOverlay(
+      'Kein Live-Link',
+      'Dieser Link enthält keinen gültigen Live-Token. Bitte öffne den Link, den du per Nachricht bekommen hast.',
+      'Zur RaceRide-Startseite'
+    );
+    return;
+  }
+
+  // Karte initialisieren, aber noch nicht anzeigen bis erster Fix da ist
+  var map = L.map('map', {zoomControl:true, attributionControl:true}).setView([53.5511, 9.9937], 13); // Hamburg default
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+
+  var marker = null;
+  var lastLat = null, lastLng = null;
+  var followUser = true; // Solange der User die Karte nicht selbst bewegt hat, folgen wir
+  map.on('dragstart', function(){ followUser = false; });
+  map.on('zoomstart', function(e){
+    // Nur unterbrechen, wenn User selbst gezoomt hat, nicht bei programmatic setView
+    if (e && e.hard === undefined && document.activeElement !== document.body) followUser = false;
+  });
+
+  function makeMarker(latlng){
+    var icon = L.divIcon({
+      className: '',
+      html: '<div class="rider-marker"></div>',
+      iconSize: [22,22],
+      iconAnchor: [11,11],
+    });
+    return L.marker(latlng, {icon: icon}).addTo(map);
+  }
+
+  function formatAgo(ms){
+    if (ms < 1500) return 'gerade eben';
+    if (ms < 60000) return Math.round(ms/1000) + 's her';
+    if (ms < 3600000) return Math.round(ms/60000) + ' min her';
+    return Math.round(ms/3600000) + ' h her';
+  }
+
+  var lastUpdateTs = null;
+  function updateAgo(){
+    if (lastUpdateTs === null) return;
+    document.getElementById('ago').textContent = formatAgo(Date.now() - lastUpdateTs);
+  }
+  setInterval(updateAgo, 1000);
+
+  var pollTimer = null;
+  var stopped = false;
+  var consecutiveErrors = 0;
+
+  function stopPolling(){
+    stopped = true;
+    if (pollTimer){ clearTimeout(pollTimer); pollTimer = null; }
+  }
+
+  function schedulePoll(delay){
+    if (stopped) return;
+    if (pollTimer) clearTimeout(pollTimer);
+    pollTimer = setTimeout(poll, delay);
+  }
+
+  function poll(){
+    if (stopped) return;
+    fetch(SUPABASE_URL + '/rest/v1/rpc/get_live_tracking_by_token', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({p_token: token}),
+    })
+    .then(function(r){
+      if (!r.ok){ throw new Error('HTTP ' + r.status); }
+      return r.json();
+    })
+    .then(function(data){
+      consecutiveErrors = 0;
+      // RPC gibt TABLE zurueck -> Array; ein einzelner scalar row-return waere Objekt.
+      var row = Array.isArray(data) ? data[0] : data;
+      if (!row){
+        showOverlay(
+          'Live-Link nicht gefunden',
+          'Zu diesem Link gibt es keine Fahrt. Der Link könnte abgelaufen sein oder falsch kopiert.',
+          'Zur RaceRide-Startseite'
+        );
+        stopPolling();
+        return;
+      }
+
+      var lat = Number(row.latitude);
+      var lng = Number(row.longitude);
+      var speed = row.speed_kmh == null ? null : Number(row.speed_kmh);
+      var isActive = row.is_active !== false; // null wird als aktiv gewertet, nur explizit false ist beendet
+      var username = row.username || 'Anonym';
+
+      document.getElementById('card').style.display = 'block';
+      document.getElementById('name').textContent = username;
+      document.getElementById('speed').textContent = speed == null ? '–' : speed.toFixed(1);
+      lastUpdateTs = Date.now();
+      updateAgo();
+
+      hideOverlay();
+
+      if (!isNaN(lat) && !isNaN(lng)){
+        var latlng = [lat, lng];
+        var moved = (lastLat !== lat || lastLng !== lng);
+        lastLat = lat; lastLng = lng;
+        if (!marker){
+          marker = makeMarker(latlng);
+          map.setView(latlng, 16);
+        } else {
+          marker.setLatLng(latlng);
+          if (followUser && moved) map.panTo(latlng, {animate:true, duration:0.5});
+        }
+      }
+
+      if (!isActive){
+        var statusEl = document.getElementById('status');
+        statusEl.classList.add('ended');
+        document.getElementById('status-text').textContent = 'Beendet';
+        showOverlay(
+          'Diese Fahrt ist beendet',
+          username + ' hat die Live-Aufzeichnung gestoppt. Die letzte bekannte Position ist auf der Karte markiert.',
+          'Zur RaceRide-Startseite'
+        );
+        stopPolling();
+        return;
+      }
+
+      schedulePoll(POLL_MS);
+    })
+    .catch(function(){
+      consecutiveErrors++;
+      if (consecutiveErrors >= 6){
+        showOverlay(
+          'Verbindung unterbrochen',
+          'Wir erreichen den Live-Server gerade nicht. Bitte prüfe deine Internetverbindung und lade die Seite neu.',
+          'Neu laden'
+        );
+        var cta = document.getElementById('overlay-cta');
+        cta.setAttribute('href', window.location.href);
+        stopPolling();
+        return;
+      }
+      // Sanftes Backoff: 5s, 5s, 10s, 10s, 20s, 20s
+      schedulePoll(consecutiveErrors <= 2 ? POLL_MS : (consecutiveErrors <= 4 ? POLL_MS * 2 : POLL_MS * 4));
+    });
+  }
+
+  poll();
+
+  // Bei Sichtbarkeit wieder direkt einen Poll ausloesen (Handy aus Standby)
+  document.addEventListener('visibilitychange', function(){
+    if (document.visibilityState === 'visible' && !stopped){
+      schedulePoll(0);
+    }
+  });
+})();
+</script>
+</body>
+</html>
