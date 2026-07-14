@@ -10,5 +10,5 @@
 # .html als auch trailing /index.html, wodurch /live und /live/ jeweils
 # wieder in die eigene /live/*-Rewrite-Regel fielen (endloser Kreis).
 # Ein Rewrite-Target ausserhalb des /live/-Namespaces bricht den Kreis.
-/live       /livepage.html                 200
-/live/*     /livepage.html?token=:splat    200
+/live       /livepage                 200
+/live/*     /livepage?token=:splat    200
