@@ -1,7 +1,9 @@
 # Cloudflare Pages redirects/rewrites
 
-# Social-Bio-Links (302 Redirect zum Anker auf der Startseite)
+# Social-Bio-Links (302 Redirect zum Anker auf der Startseite;
+# beide Schreibweisen abdecken — Bindestrich und zusammen)
 /beta-tester /#beta-tester 302
+/betatester  /#beta-tester 302
 
 # /live und /live/{token} werden von Cloudflare Pages Functions
 # (functions/live/[token].js + functions/live/index.js) behandelt —
