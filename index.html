@@ -110,6 +110,15 @@
   .counter-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);animation:pulse 2s infinite}
   @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
 
+  /* VIDEO EXPLAINER */
+  .video-explainer{padding:80px 24px;max-width:900px;margin:0 auto;text-align:center}
+  .video-facade{position:relative;max-width:800px;margin:40px auto 0;border-radius:16px;overflow:hidden;cursor:pointer;border:1px solid rgba(232,93,0,0.3);aspect-ratio:16/9;background:var(--surface)}
+  .video-facade img{width:100%;height:100%;object-fit:cover;display:block}
+  .video-facade .play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:76px;height:76px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform 0.2s,background 0.2s;box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+  .video-facade:hover .play-btn{transform:translate(-50%,-50%) scale(1.08);background:var(--orange-dark)}
+  .video-facade .play-btn svg{width:26px;height:26px;fill:#fff;margin-left:4px}
+  .video-facade iframe{width:100%;height:100%;border:0;display:block}
+
   /* PROOF STRIP */
   .proof{padding:40px 24px;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);text-align:center}
   .proof p{font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.2);margin-bottom:20px}
@@ -286,6 +295,18 @@
   <div class="counter">
     <div class="counter-dot"></div>
     Beta v1.8.4 — Aktiv in Entwicklung
+  </div>
+</section>
+
+<!-- VIDEO EXPLAINER -->
+<section class="video-explainer" id="video">
+  <div class="section-label">In 70 Sekunden erklärt</div>
+  <h2 class="section-title">So funktioniert RaceRide.</h2>
+  <div class="video-facade" id="video-facade" onclick="loadRaceRideVideo()">
+    <img src="https://img.youtube.com/vi/5x_pV_Y011Q/maxresdefault.jpg" alt="RaceRide App Erklärvideo" loading="lazy">
+    <div class="play-btn" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </div>
   </div>
 </section>
 
@@ -587,6 +608,11 @@
 </footer>
 
 <script>
+function loadRaceRideVideo() {
+  var facade = document.getElementById('video-facade');
+  facade.onclick = null;
+  facade.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/5x_pV_Y011Q?autoplay=1&rel=0" title="RaceRide App Erklärvideo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>';
+}
 function handleSubmit(e, msgId) {
   e.preventDefault();
   var form = e.target;
@@ -641,8 +667,10 @@ function handleSubmit(e, msgId) {
     <h3>7. GPS-Daten (App)</h3>
     <p>Die RaceRide App verarbeitet GPS-Daten nur während aktiver Aufnahme. GPS-Zugriff ist in den Systemeinstellungen jederzeit deaktivierbar.</p>
     <h3>8. Cookies</h3>
-    <p>Diese Landing Page verwendet keine Cookies und kein Tracking.</p>
-    <h3>9. Vollständige Datenschutzerklärung</h3>
+    <p>Diese Landing Page verwendet von sich aus keine Cookies und kein Tracking.</p>
+    <h3>9. Eingebettetes YouTube-Video</h3>
+    <p>Auf dieser Seite ist ein YouTube-Video über die datenschutzfreundliche Domain youtube-nocookie.com eingebunden. Das Video lädt nicht automatisch mit dem Seitenaufruf, sondern erst, wenn du aktiv auf das Vorschaubild klickst. Erst dann wird eine Verbindung zu Servern von Google Ireland Limited aufgebaut und deine IP-Adresse an Google übertragen; vorher findet keine Datenübertragung an YouTube/Google statt. Weitere Infos: <a href="https://policies.google.com/privacy" target="_blank">policies.google.com/privacy</a></p>
+    <h3>10. Vollständige Datenschutzerklärung</h3>
     <p>Die vollständige Datenschutzerklärung (inkl. App-Daten) findest du unter: <a href="datenschutz.html">datenschutz.html</a></p>
   </div>
 </div>
